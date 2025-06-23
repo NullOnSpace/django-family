@@ -14,6 +14,9 @@ class Member(models.Model):
     gender = models.CharField(max_length=8, choices=GENDERS)
     birth_date = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return self.user.username
+
 
 class Relation(models.Model):
     RELATION_TYPES = (
@@ -26,3 +29,6 @@ class Relation(models.Model):
         Member, related_name='member2', on_delete=models.CASCADE)
     relation_type = models.CharField(max_length=32, choices=RELATION_TYPES)
     start_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.member1} is {self.member2}'s {self.get_relation_type_display()}"

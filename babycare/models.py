@@ -24,3 +24,14 @@ class BabyDate(models.Model):
         if ultrasound_fixed:
             date_diff -= self.ultrasound_fixed_days
         return date_diff.days
+
+    def days_to_due(self, date: datetime.date | None = None) -> int:
+        """
+        计算距离预产期的天数
+        :param date: 计算距离预产期的日期，默认为当前日期
+        :return: 距离预产期的天数
+        """
+        if date is None:
+            date = timezone.now().date()
+        return (self.estimated_due_date - date).days
+        

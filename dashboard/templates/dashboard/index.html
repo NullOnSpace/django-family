@@ -1,0 +1,10 @@
+{% extends "dashboard/base.html" %}
+{% load babycare_tags %}
+
+{% block title %}主页{% endblock %}
+
+{% block body %}
+<h1>HEYHEYHEY</h1>
+<div>宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
+<div>宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
+{% endblock %}

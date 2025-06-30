@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'iuser',
     'relation',
     'babycare',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

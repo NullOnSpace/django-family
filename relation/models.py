@@ -31,4 +31,4 @@ class Relation(models.Model):
     start_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.member1} is {self.member2}'s {self.get_relation_type_display()}"
+        return f"{self.member1} is {self.member2}'s {self.get_relation_type_display()}" # type: ignore

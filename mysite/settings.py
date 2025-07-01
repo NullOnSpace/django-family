@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'babycare',
     'dashboard',
     'task_calendar',
+    'shopping_list',
 ]
 
 MIDDLEWARE = [

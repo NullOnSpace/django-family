@@ -3,6 +3,7 @@ from django.http import HttpRequest, HttpResponse
 
 from babycare.models import BabyDate
 from task_calendar.models import TaskCalendar
+from shopping_list.models import ShoppingList
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -14,4 +15,5 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     baby_date = BabyDate.objects.first()
     task_calendars = TaskCalendar.objects.all()
-    return render(request, 'dashboard/index.html', {'baby_date': baby_date, 'task_calendars': task_calendars})
+    shopping_list = ShoppingList.objects.first
+    return render(request, 'dashboard/index.html', {'baby_date': baby_date, 'task_calendars': task_calendars, "shopping_list": shopping_list})

@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import ShoppingList, ItemCategory, Item, ItemRecord
+
+
+admin.site.register(ShoppingList)
+admin.site.register(ItemCategory)
+admin.site.register(Item)
+admin.site.register(ItemRecord)

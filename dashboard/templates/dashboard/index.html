@@ -4,7 +4,6 @@
 {% block title %}主页{% endblock %}
 
 {% block body %}
-<h1>相亲相爱一家人</h1>
 <div class="switcher">
     <div class="switcher-contents" id="baby-ga">
         <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
@@ -16,7 +15,7 @@
     </div>
 </div>
 {% with baby_date.days_to_due as dtd %}
-<div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-"}}{% endif %}天</div>
+<div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
 <div id="task-calendar">
     <h3>近期安排</h3>
     {% if task_calendars %}
@@ -31,4 +30,42 @@
     {% endif %}
 </div>
 {% endwith %}
+<div class="shopping-list">
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>品类</th>
+            <th>品名</th>
+            <th>数量</th>
+            <th>备注</th>
+        </tr>
+        {% for cate in shopping_list.categories.all %}
+            {% for item_record in cate.items.all %}
+                {% if forloop.first %}
+                <tr>
+                    <td rowspan="{{ cate.items.count }}">{{ forloop.parentloop.counter }}</td>
+                    <td rowspan="{{ cate.items.count }}">{{ cate.name }}</td>
+                    <td>{{ item_record.item.name }}</td>
+                    <td>{{ item_record.quantity }}</td>
+                    <td>{{ item_record.note }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>{{ item_record.item.name }}</td>
+                    <td>{{ item_record.quantity }}</td>
+                    <td>{{ item_record.note }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td>{{ forloop.parentloop.counter }}</td>
+                    <td>{{ cate.name }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

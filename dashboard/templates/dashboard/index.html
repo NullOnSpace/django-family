@@ -4,6 +4,7 @@
 {% block title %}主页{% endblock %}
 
 {% block body %}
+<div>{% now "Y年m月d日-H:i:s" %}</div>
 <div class="switcher">
     <div class="switcher-contents" id="baby-ga">
         <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
@@ -42,23 +43,23 @@
         {% for cate in shopping_list.categories.all %}
             {% for item_record in cate.items.all %}
                 {% if forloop.first %}
-                <tr>
-                    <td rowspan="{{ cate.items.count }}">{{ forloop.parentloop.counter }}</td>
+                <tr class="{{ cate.get_css_class }}">
+                    <td rowspan="{{ cate.items.count }}">{{ forloop.parentloop.counter1 }}</td>
                     <td rowspan="{{ cate.items.count }}">{{ cate.name }}</td>
                     <td>{{ item_record.item.name }}</td>
                     <td>{{ item_record.quantity }}</td>
                     <td>{{ item_record.note }}</td>
                 </tr>
                 {% else %}
-                <tr>
+                <tr class="{{ cate.get_css_class }}">
                     <td>{{ item_record.item.name }}</td>
                     <td>{{ item_record.quantity }}</td>
                     <td>{{ item_record.note }}</td>
                 </tr>
                 {% endif %}
             {% empty %}
-                <tr>
-                    <td>{{ forloop.parentloop.counter }}</td>
+                <tr class="{{ cate.get_css_class }}">
+                    <td>{{ forloop.parentloop.counter1 }}</td>
                     <td>{{ cate.name }}</td>
                     <td></td>
                     <td></td>

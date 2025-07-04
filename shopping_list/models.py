@@ -28,6 +28,14 @@ class ItemCategory(models.Model):
     def __str__(self):
         return self.name
 
+    def get_css_class(self):
+        """Return a CSS class based on the status."""
+        return {
+            'incomplete': 'table-warning',
+            'complete': 'table-success',
+            'cancelled': 'table-dark',
+            'delayed': 'table-secondary',
+        }.get(self.status, 'table-primary')
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
@@ -45,4 +53,4 @@ class ItemRecord(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.quantity} x {self.item.name} in {self.category.name}"
+        return f"{self.item.name} x {self.quantity} in {self.category.name}"

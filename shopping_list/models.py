@@ -18,7 +18,7 @@ class ItemCategory(models.Model):
         ('cancelled', 'Cancelled'),
         ('delayed', 'Delayed'),
     ]
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     shopping_list = models.ForeignKey(
         ShoppingList, related_name='categories', on_delete=models.CASCADE)
     status = models.CharField(
@@ -26,7 +26,7 @@ class ItemCategory(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} in {self.shopping_list.name}"
 
     def get_css_class(self):
         """Return a CSS class based on the status."""

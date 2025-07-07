@@ -31,16 +31,18 @@ class ItemCategory(models.Model):
     def get_css_class(self):
         """Return a CSS class based on the status."""
         return {
-            'incomplete': 'table-warning',
+            'incomplete': 'table-light',
             'complete': 'table-success',
             'cancelled': 'table-dark',
-            'delayed': 'table-secondary',
+            'delayed': 'table-primary',
         }.get(self.status, 'table-primary')
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 
 class ItemRecord(models.Model):
     item = models.ForeignKey(

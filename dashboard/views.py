@@ -15,5 +15,5 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     baby_date = BabyDate.objects.first()
     task_calendars = TaskCalendar.objects.all()
-    shopping_list = ShoppingList.objects.first
+    shopping_list = ShoppingList.objects.last()
     return render(request, 'dashboard/index.html', {'baby_date': baby_date, 'task_calendars': task_calendars, "shopping_list": shopping_list})

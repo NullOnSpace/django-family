@@ -101,6 +101,7 @@
         crossorigin="anonymous"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            console.log('页面加载完成');
             // swithers.js
             // 处理切换器的逻辑
             let switchers = document.querySelectorAll('.switcher');
@@ -125,7 +126,52 @@
                     }
                 });
             });
-            console.log('页面加载完成');
+            // 展示清单的表项和表单间的转化
+            let displayValues = document.querySelectorAll('.display-value');
+            displayValues.forEach(function (displayValue) {
+                let inputValue = displayValue.nextElementSibling;
+                displayValue.addEventListener('click', function () {
+                    displayValue.style.display = 'none';
+                    inputValue.style.display = 'inline-block';
+                    inputValue.focus();
+                });
+                inputValue.addEventListener('blur', function () {
+                    displayValue.style.display = 'inline-block';
+                    inputValue.style.display = 'none';
+                    // 还有ajax的逻辑
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('POST', inputValue.getAttribute('data-target'), true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(JSON.stringify({
+                        'status': inputValue.value,
+                        'shopping_list_id': inputValue.getAttribute('data-target-id')
+                    }));
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            let response = JSON.parse(xhr.responseText);
+                            if (xhr.status === 200 && response.success) {
+                                // 成功处理
+                                console.log('状态更新成功');
+                                if (response.css_class) {
+                                    let trs = document.querySelectorAll('tr[data-item-category-id="' + inputValue.getAttribute('data-target-id') + '"]');
+                                    trs.forEach(function (tr) {
+                                        tr.className = response.css_class;
+                                    });
+                                }
+                                if (response.value) {
+                                    displayValue.textContent = response.value;
+                                } else {
+                                    displayValue.textContent = inputValue.value;
+                                }
+                            } else {
+                                // 错误处理
+                                console.error('状态更新失败:', xhr.responseText);
+                            }
+                        }
+                    };
+                });
+            });
         });
     </script>
 </body>

@@ -34,7 +34,7 @@
 <div class="shopping-list">
     <table class="table">
         <tr>
-            <th>#</th>
+            <th>状态</th>
             <th>品类</th>
             <th>品名</th>
             <th>数量</th>
@@ -42,24 +42,32 @@
         </tr>
         {% for cate in shopping_list.categories.all %}
             {% for item_record in cate.items.all %}
-                {% if forloop.first %}
-                <tr class="{{ cate.get_css_class }}">
-                    <td rowspan="{{ cate.items.count }}">{{ forloop.parentloop.counter1 }}</td>
+                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
+                    {% if forloop.first %}
+                    <td rowspan="{{ cate.items.count }}">
+                        <span class="display-value">{{ cate.get_status_display }}</span>
+                        <select name="item-category" id="item-category-{{cate.id}}" class="input-value" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        {% for status, status_display in cate.STATUS_CHOICES %}
+                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
                     <td rowspan="{{ cate.items.count }}">{{ cate.name }}</td>
+                    {% endif %}
                     <td>{{ item_record.item.name }}</td>
                     <td>{{ item_record.quantity }}</td>
                     <td>{{ item_record.note }}</td>
                 </tr>
-                {% else %}
-                <tr class="{{ cate.get_css_class }}">
-                    <td>{{ item_record.item.name }}</td>
-                    <td>{{ item_record.quantity }}</td>
-                    <td>{{ item_record.note }}</td>
-                </tr>
-                {% endif %}
             {% empty %}
-                <tr class="{{ cate.get_css_class }}">
-                    <td>{{ forloop.parentloop.counter1 }}</td>
+                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
+                    <td>
+                        <span class="display-value">{{ cate.get_status_display }}</span>
+                        <select name="item-category" id="item-category-{{cate.id}}" class="input-value" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        {% for status, status_display in cate.STATUS_CHOICES %}
+                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
                     <td>{{ cate.name }}</td>
                     <td></td>
                     <td></td>

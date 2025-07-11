@@ -1,0 +1,139 @@
+{% extends "dashboard/base.html" %}
+
+
+{% block title %}{{shopping_list.name}}{% endblock %}
+
+{% block main %}
+<h1>{{shopping_list.name}} <i class="bi-plus-square modal-button" data-bs-toggle="modal" data-bs-target="#item-category-add-modal" data-bs-list-id="{{shopping_list.id}}" style="color: cornflowerblue;"></i></h1>
+<div class="shopping-list">
+    <table class="table table-responsive">
+        <tr>
+            <th style="width:5rem">状态</th>
+            <th>品类</th>
+            <th>品名</th>
+            <th style="width:3rem;">数量</th>
+            <th style="min-width:3rem;">备注</th>
+        </tr>
+        {% for cate in shopping_list.categories.all %}
+            {% for item_record in cate.items.all %}
+                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
+                    {% if forloop.first %}
+                    <td class="display-input-toggle" rowspan="{{ cate.items.count }}">
+                        <span class="display-value">{{ cate.get_status_display }}</span>
+                        <select name="item-category" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        {% for status, status_display in cate.STATUS_CHOICES %}
+                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td class="display-input-toggle" rowspan="{{ cate.items.count }}">
+                        <span class="display-value">{{ cate.name }}</span>
+                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
+                        <i class="bi-plus-square modal-button add-record-button" data-bs-toggle="modal" data-bs-target="#item-record-add-modal" data-bs-cate-id="{{cate.id}}" style="font-size: 1rem; color: cornflowerblue;"></i>
+                    </td>
+                    {% endif %}
+                    <td class="display-input-toggle">
+                        <span class="display-value">{{ item_record.name }}</span>
+                        <input type="text" name="item-record-name" value="{{ item_record.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_name' %}">
+                    </td>
+                    <td class="display-input-toggle">
+                        <span class="display-value">{{ item_record.quantity }}</span>
+                        <input type="number" name="item-record-quantity" value="{{ item_record.quantity }}"  class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_quantity' %}">
+                    </td>
+                    <td class="display-input-toggle">
+                        <span class="display-value">{{ item_record.note }}</span>
+                        <input type="text" name="item-record-note" value="{{ item_record.note }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_note' %}">
+                    </td>
+                </tr>
+            {% empty %}
+                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
+                    <td class="display-input-toggle">
+                        <span class="display-value">{{ cate.get_status_display }}</span>
+                        <select name="item-category" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        {% for status, status_display in cate.STATUS_CHOICES %}
+                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td class="display-input-toggle">
+                        <span class="display-value">{{ cate.name }}</span>
+                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
+                        <i class="bi-plus-square modal-button add-record-button" data-bs-toggle="modal" data-bs-target="#item-record-add-modal" data-bs-cate-id="{{cate.id}}" style="font-size: 1rem; color: cornflowerblue;"></i>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+</div>
+<!-- 新品类 -->
+<div class="modal fade" id="item-category-add-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="item-category-add-modal-label">为 {{shopping_list.name}} 添加新品类</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="create-new-item-category" onsubmit="return false;">
+          <div class="mb-3">
+            <label for="item-category-name" class="col-form-label">品类名称:</label>
+            <input type="text" class="form-control" name="item_category_name" id="item-category-name">
+          </div>
+          <div class="mb-3">
+            <label for="item-category-note" class="col-form-label">备注</label>
+            <textarea class="form-control" name="item_category_note" id="item-category-note"></textarea>
+          </div>
+          <input type="hidden" id="shopping-list-id" name="shopping_list_id" value="{{ shopping_list.id }}">
+          {% csrf_token %}
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" data-target-id="create-new-item-category" data-target-src="{% url 'ajax_create_item_category' %}" data-success-src="{% url 'shopping_list_detail' shopping_list.id %}">创建</button>
+    </div>
+</div>
+</div>
+</div>
+<!-- 新单品 -->
+<div class="modal fade" id="item-record-add-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="item-category-add-modal-label">为 ***品类 添加新单品</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="return false;" id="create-new-item-record">
+                    <div class="mb-3">
+                        <label for="item-name" class="col-form-label">单品名称:</label>
+                        <input type="text" class="form-control" name="item_name" id="item-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-quantity" class="col-form-label">单品数量:</label>
+                        <input type="number" class="form-control" name="item_quantity" id="item-quantity" value="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-record-note" class="col-form-label">备注</label>
+                        <textarea class="form-control" name="item_record_note" id="item-record-note"></textarea>
+                    </div>
+                    <input type="hidden" id="item-category-id" name="item_category_id" value="">
+                    {% csrf_token %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-target-id="create-new-item-record" data-target-src="{% url 'ajax_create_item_record' %}" data-success-src="{% url 'shopping_list_detail' shopping_list.id %}">创建</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block aside %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'shopping_list/static/js/inplace_edit.js' %}"></script>
+{% endblock %}

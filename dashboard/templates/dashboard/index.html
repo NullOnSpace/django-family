@@ -3,78 +3,18 @@
 
 {% block title %}主页{% endblock %}
 
-{% block body %}
-<div>{% now "Y年m月d日-H:i:s" %}</div>
-<div class="switcher">
-    <div class="switcher-contents" id="baby-ga">
-        <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
-        <div class="switcher-content active-content" id="baby-ga-lmp">宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
+{% block main %}
+    <div class="switcher">
+        <div class="switcher-contents" id="baby-ga">
+            <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
+            <div class="switcher-content active-content" id="baby-ga-lmp">宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
+        </div>
+        <div class="switcher-buttons" id="baby-ga-buttons">
+            <span class="switcher-button active-button" data-target="baby-ga-lmp">LMP估算</span>
+            <span class="switcher-button" data-target="baby-ga-us">超声估算</span>
+        </div>
     </div>
-    <div class="switcher-buttons" id="baby-ga-buttons">
-        <span class="switcher-button active-button" data-target="baby-ga-lmp">LMP估算</span>
-        <span class="switcher-button" data-target="baby-ga-us">超声估算</span>
-    </div>
-</div>
-{% with baby_date.days_to_due as dtd %}
-<div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
-<div id="task-calendar">
-    <h3>近期安排</h3>
-    {% if task_calendars %}
-    <ul id="task-calendar-list">
-        {% for task in task_calendars %}
-        <li class="task-calendar-item {{task.get_display_class}}">
-            <div><strong>{{ task.description }}</strong></div>
-            <div><small>{{ task.start_date|date:"Y年m月d日" }}{% if task.end_date %} 至 {{ task.end_date|date:"Y年m月d日" }}{% endif %}</small></div>
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-</div>
-{% endwith %}
-<div class="shopping-list">
-    <table class="table">
-        <tr>
-            <th>状态</th>
-            <th>品类</th>
-            <th>品名</th>
-            <th>数量</th>
-            <th>备注</th>
-        </tr>
-        {% for cate in shopping_list.categories.all %}
-            {% for item_record in cate.items.all %}
-                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
-                    {% if forloop.first %}
-                    <td rowspan="{{ cate.items.count }}">
-                        <span class="display-value">{{ cate.get_status_display }}</span>
-                        <select name="item-category" id="item-category-{{cate.id}}" class="input-value" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
-                        {% for status, status_display in cate.STATUS_CHOICES %}
-                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
-                        {% endfor %}
-                        </select>
-                    </td>
-                    <td rowspan="{{ cate.items.count }}">{{ cate.name }}</td>
-                    {% endif %}
-                    <td>{{ item_record.item.name }}</td>
-                    <td>{{ item_record.quantity }}</td>
-                    <td>{{ item_record.note }}</td>
-                </tr>
-            {% empty %}
-                <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
-                    <td>
-                        <span class="display-value">{{ cate.get_status_display }}</span>
-                        <select name="item-category" id="item-category-{{cate.id}}" class="input-value" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
-                        {% for status, status_display in cate.STATUS_CHOICES %}
-                            <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
-                        {% endfor %}
-                        </select>
-                    </td>
-                    <td>{{ cate.name }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            {% endfor %}
-        {% endfor %}
-    </table>
-</div>
+    {% with baby_date.days_to_due as dtd %}
+    <div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
+    {% endwith %}
 {% endblock %}

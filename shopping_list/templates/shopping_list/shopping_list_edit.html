@@ -1,0 +1,54 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}修改 {{shopping_list.name}}{% endblock %}
+
+{% block style_links %}
+<link rel="stylesheet" href="{% static 'css/message_box.css' %}">
+{% endblock %}
+
+{% block main %}
+<h1>修改 {{shopping_list.name}}</h1>
+<div class="item-cate-list">
+    {% for cate, records in cates.items %}
+        <div data-ss-id="{{ cate.id }}" data-ss-target="{% url 'ajax_change_item_category' %}">
+            <form onsubmit="return false;">
+                {% for field, errors in cate.context.fields %}
+                    <div class="row">
+                        <div class="col-3">{% if field.label %}{{ field.label_tag }}{% endif %}</div>
+                        <div class="col-9">{{ field }}</div>
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+                <div class="slight-padding">
+                    <button class="btn btn-primary fw-bold ft-monospace" onsubmit="return false;">添加新单品</button>
+                </div>
+            </form>
+        </div>
+        {% for record in records %}
+        <div class="left-side-mark">
+            <div data-ss-id="{{ record.id }}" data-ss-target="{% url 'ajax_change_item_record' %}">
+                <form onsubmit="return false;">
+                    {% for field, errors in record.context.fields %}
+                        <div class="row">
+                            <div class="col-3">{% if field.label %}{{ field.label_tag }}{% endif %}</div>
+                            <div class="col-9">{{ field }}</div>
+                        </div>
+                    {% endfor %}
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+</div>
+<div id="messageBox" class="message-box alert"></div>
+{% endblock %}
+
+{% block aside %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/message_box.js' %}"></script>
+<script src="{% static 'js/smart_submit.js' %}"></script>
+{% endblock %}

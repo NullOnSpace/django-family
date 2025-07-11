@@ -1,0 +1,48 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{shopping_list.name}}{% endblock %}
+
+{% block main %}
+<h1>{{shopping_list.name}} <small><a href="{% url 'shopping_list_edit' shopping_list.id %}"><i class="bi bi-pencil"></i></a></small></h1>
+<div class="shopping-list">
+    <table class="table table-responsive">
+        <tr>
+            <th>品类</th>
+            <th>品名</th>
+            <th>数量</th>
+        </tr>
+        {% for cate in shopping_list.categories.all %}
+        <tr class="{{ cate.get_css_class }}">
+                    <td rowspan="{% if cate.items.count == 0 %}1{% else %}{{cate.items.count}}{% endif %}">
+                        {{ cate.name }}{%if cate.note %} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ cate.note }}"></i>{% endif %}
+                    </td>
+            {% for item_record in cate.items.all %}
+                {% if forloop.first %}
+                    <td>
+                        {{ item_record.name }}{%if item_record.note%} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ item_record.note }}"></i>{% endif %}
+                    </td>
+                    <td>
+                        {{ item_record.quantity }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr class="{{ cate.get_css_class }}">
+                    <td>
+                        {{ item_record.name }}{%if item_record.note%} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ item_record.note }}"></i>{% endif %}
+                    </td>
+                    <td>
+                        {{ item_record.quantity }}
+                    </td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+{% block aside %}
+{% endblock %}

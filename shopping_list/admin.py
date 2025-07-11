@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from .models import ShoppingList, ItemCategory, Item, ItemRecord
+from .models import ShoppingList, ItemCategory, ItemRecord
 
 
 admin.site.register(ShoppingList)
 admin.site.register(ItemCategory)
-admin.site.register(Item)
 admin.site.register(ItemRecord)

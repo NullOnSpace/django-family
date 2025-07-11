@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -88,92 +89,72 @@
         .switcher-content {
             display: none;
         }
+
+        .left-side-mark {
+            margin-top: 1rem;
+            border-left: 1rem solid var(--bs-primary);
+            padding-left: 1rem;
+        }
+
+        .item-cate-list {
+            margin-top: 1rem;
+            line-height: 2.5rem;
+        }
+
+        .slight-padding {
+            padding: 0.5rem 0;
+        }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    {% block style_links %}
+    {% endblock %}
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 
 <body>
-    {% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-8 col-md-12">
+                <main>
+                    {% block main %}
+                    {% endblock %}
+                </main>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <aside>
+                    {% block aside %}
+                        <section id="task-calendar">
+                <h3>近期安排</h3>
+                {% if task_calendars %}
+                <ul id="task-calendar-list">
+                    {% for task in task_calendars %}
+                    <li class="task-calendar-item {{task.get_display_class}}">
+                        <div><strong>{{ task.description }}</strong></div>
+                        <div><small>{{ task.start_date|date:"Y年m月d日" }}{% if task.end_date %} 至 {{ task.end_date|date:"Y年m月d日" }}{% endif %}</small></div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                </section>
+                <section id="shopping-list">
+                    <h3>清单</h3>
+                    <ul id="shopping-lists">
+                        {% for list in shopping_lists %}
+                        <li class="shopping-list"><a href="{% url 'shopping_list_detail' list.id %}">{{list.name}}</a></li>
+                        {% empty %}
+                        <li>清单为空</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                    {% endblock %}
+                </aside>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block scripts %}
     {% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-        integrity="sha384-ep+dxp/oz2RKF89ALMPGc7Z89QFa32C8Uv1A3TcEK8sMzXVysblLA3+eJWTzPJzT"
-        crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('页面加载完成');
-            // swithers.js
-            // 处理切换器的逻辑
-            let switchers = document.querySelectorAll('.switcher');
-            switchers.forEach(function (switcher) {
-                let buttons = switcher.querySelector(".switcher-buttons");
-                let contents = switcher.querySelector(".switcher-contents");
-                let activeButton = buttons.querySelector(".active-button");
-                buttons.addEventListener('click', function (event) {
-                    if (event.target.classList.contains('switcher-button')) {
-                        // 切换按钮状态
-                        activeButton.classList.remove('active-button');
-                        event.target.classList.add('active-button');
-                        activeButton = event.target;
-
-                        // 切换内容显示
-                        contents.querySelectorAll('.switcher-content').forEach(function (content) {
-                            content.classList.remove('active-content');
-                        });
-                        let targetContentId = event.target.getAttribute('data-target');
-                        let targetContent = contents.querySelector('#' + targetContentId);
-                        targetContent.classList.add('active-content');
-                    }
-                });
-            });
-            // 展示清单的表项和表单间的转化
-            let displayValues = document.querySelectorAll('.display-value');
-            displayValues.forEach(function (displayValue) {
-                let inputValue = displayValue.nextElementSibling;
-                displayValue.addEventListener('click', function () {
-                    displayValue.style.display = 'none';
-                    inputValue.style.display = 'inline-block';
-                    inputValue.focus();
-                });
-                inputValue.addEventListener('blur', function () {
-                    displayValue.style.display = 'inline-block';
-                    inputValue.style.display = 'none';
-                    // 还有ajax的逻辑
-                    let xhr = new XMLHttpRequest();
-                    xhr.open('POST', inputValue.getAttribute('data-target'), true);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                    xhr.send(JSON.stringify({
-                        'status': inputValue.value,
-                        'shopping_list_id': inputValue.getAttribute('data-target-id')
-                    }));
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            let response = JSON.parse(xhr.responseText);
-                            if (xhr.status === 200 && response.success) {
-                                // 成功处理
-                                console.log('状态更新成功');
-                                if (response.css_class) {
-                                    let trs = document.querySelectorAll('tr[data-item-category-id="' + inputValue.getAttribute('data-target-id') + '"]');
-                                    trs.forEach(function (tr) {
-                                        tr.className = response.css_class;
-                                    });
-                                }
-                                if (response.value) {
-                                    displayValue.textContent = response.value;
-                                } else {
-                                    displayValue.textContent = inputValue.value;
-                                }
-                            } else {
-                                // 错误处理
-                                console.error('状态更新失败:', xhr.responseText);
-                            }
-                        }
-                    };
-                });
-            });
-        });
-    </script>
 </body>
-
 </html>

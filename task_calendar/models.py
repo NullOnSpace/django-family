@@ -44,6 +44,16 @@ class TaskCalendar(models.Model):
     def is_outdated(self):
         return self.end_date < timezone.now()
     
+    def get_status(self):
+        if self.is_completed:
+            return '已完成'
+        elif self.is_outdated():
+            return '已过期'
+        elif self.start_date <= timezone.now() <= self.end_date:
+            return '进行中'
+        else:
+            return '未开始'
+    
     def get_display_class(self):
         if self.is_completed:
             return 'task-calendar-completed'

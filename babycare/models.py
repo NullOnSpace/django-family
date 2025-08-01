@@ -109,9 +109,9 @@ class BabyDate(models.Model):
 
     def days_to_due(self, date: datetime.date | None = None) -> int:
         """
-        计算距离预产期的天数
-        出生前用于计算距离预产期的天数(为正数)
-        出生后用于计算早产儿的矫正年龄(为负数)
+        计算距离预产期的天数(足月后为负数)
+        出生前用于计算距离预产期的天数
+        出生后用于计算早产儿的矫正年龄
         早于末次月经的日期抛出异常 EarlierThanLMPError
         :param date: 计算距离预产期的日期，默认为当前日期
         :return: 距离预产期的天数

@@ -89,11 +89,11 @@ class BabyDateTestCase(TestCase):
         # Test with term baby
         baby_date.birthday = timezone.now() - timezone.timedelta(days=10)
         # Test with a date before the birthday
-        date_before_birthday = (baby_date.birthday - # type: ignore
+        date_before_birthday = (baby_date.birthday -  # type: ignore
                                 timezone.timedelta(days=5)).date()
         with self.assertRaises(NotBornError):
             baby_date.get_corrected_age_days(date_before_birthday)
-        
+
         # Test with a date after the birthday
         date_after_birthday = (baby_date.birthday +  # type: ignore
                                timezone.timedelta(days=5)).date()

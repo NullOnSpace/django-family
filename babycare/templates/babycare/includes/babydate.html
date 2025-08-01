@@ -1,0 +1,38 @@
+{% load babycare_tags %}
+{% if baby_date.is_born %}
+    {% if baby_date.is_preterm %}
+        {% if baby_date.days_to_due < 0 %}
+            {# 早产儿足月 可显示矫正月龄 #}
+            <div class="switcher">
+                <div class="switcher-contents" id="baby-age">
+                    <div class="switcher-content active-content" id="baby-age-chron">宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+                    <div class="switcher-content" id="baby-age-corrected">宝宝现在是{{ baby_date.get_corrected_age_days|get_age_months }}</div>
+                </div>
+                <div class="switcher-buttons" id="baby-age-buttons">
+                    <span class="switcher-button active-button" data-target="baby-age-chron">实际月龄</span>
+                    <span class="switcher-button" data-target="baby-age-corrected">矫正月龄</span>
+                </div>
+            </div>
+        {% else %}
+            {# 早产儿未足月 不显示矫正月龄 #}
+            <div>宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+        {% endif %}
+    {% else %}
+        {# 正常足月的婴儿 不显示矫正月龄 #}
+        <div>宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+    {% endif %}
+{% else %}
+    <div class="switcher">
+        <div class="switcher-contents" id="baby-ga">
+            <div class="switcher-content active-content" id="baby-ga-lmp">宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
+            <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
+        </div>
+        <div class="switcher-buttons" id="baby-ga-buttons">
+            <span class="switcher-button active-button" data-target="baby-ga-lmp">LMP估算</span>
+            <span class="switcher-button" data-target="baby-ga-us">超声估算</span>
+        </div>
+    </div>
+    {% with baby_date.days_to_due as dtd %}
+        <div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
+    {% endwith %}
+{% endif %}

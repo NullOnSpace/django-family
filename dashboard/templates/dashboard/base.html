@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <style>
-        #baby-ga {
+        #baby-ga,#baby-age {
             display: inline-block;
         }
 
@@ -126,16 +126,7 @@
                     {% block aside %}
                         <section id="task-calendar">
                 <h3>近期安排</h3>
-                {% if task_calendars %}
-                <ul id="task-calendar-list">
-                    {% for task in task_calendars %}
-                    <li class="task-calendar-item {{task.get_display_class}}">
-                        <div><strong>{{ task.description }}</strong></div>
-                        <div><small>{{ task.start_date|date:"Y年m月d日" }}{% if task.end_date %} 至 {{ task.end_date|date:"Y年m月d日" }}{% endif %}</small></div>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                {% include "task_calendar/includes/task_list_simple.html" %}
                 </section>
                 <section id="shopping-list">
                     <h3>清单</h3>

@@ -1,20 +1,7 @@
 {% extends "dashboard/base.html" %}
-{% load babycare_tags %}
 
 {% block title %}主页{% endblock %}
 
 {% block main %}
-    <div class="switcher">
-        <div class="switcher-contents" id="baby-ga">
-            <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>
-            <div class="switcher-content active-content" id="baby-ga-lmp">宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
-        </div>
-        <div class="switcher-buttons" id="baby-ga-buttons">
-            <span class="switcher-button active-button" data-target="baby-ga-lmp">LMP估算</span>
-            <span class="switcher-button" data-target="baby-ga-us">超声估算</span>
-        </div>
-    </div>
-    {% with baby_date.days_to_due as dtd %}
-    <div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
-    {% endwith %}
+    {% include "babycare/includes/babydate.html" %}
 {% endblock %}

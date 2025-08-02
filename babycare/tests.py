@@ -29,8 +29,7 @@ class BabyDateTestCase(TestCase):
             birthday=birthday
         )
         # Test with a date after the birthday
-        with self.assertRaises(LaterThanBirthError):
-            baby_date.get_gestational_age_days()
+        self.assertEqual(baby_date.get_gestational_age_days(), 270)
 
         # Test with a date before the birthday
         date_before_birthday = (birthday - timezone.timedelta(days=5)).date()

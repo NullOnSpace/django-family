@@ -42,7 +42,8 @@ class BabyDate(models.Model):
     def get_gestational_age_days(self, date:  datetime.date | None = None, ultrasound_fixed: bool = False) -> int:
         """
         计算孕周的天数
-        晚于出生的日期抛出异常 LaterThanBirthError
+        早于出生的日期用于计算孕周
+        晚于出生的日期用于计算PMA
         早于末次月经的日期抛出异常 EarlierThanLMPError
         :param date: 计算孕周的日期，默认为当前日期
         :param ultrasound_fixed: 是否使用超声定位的孕周初始日期
@@ -50,9 +51,6 @@ class BabyDate(models.Model):
         """
         if date is None:
             date = timezone.now().date()
-        if self.birthday and date > self.birthday.date():
-            raise LaterThanBirthError(
-                f"The date for GA: {date} is later than the birthday: {self.birthday}.")
         days = self.days_to_lmp(date)
         if ultrasound_fixed:
             days -= self.ultrasound_fixed_days

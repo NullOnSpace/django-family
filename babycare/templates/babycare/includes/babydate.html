@@ -2,23 +2,34 @@
 {% if baby_date.is_born %}
     {% if baby_date.is_preterm %}
         {% if baby_date.days_to_due < 0 %}
-            {# 早产儿足月 可显示矫正月龄 #}
-            <div class="switcher">
+            {# 早产儿足月 显示矫正月龄、PMA以及实际月龄 #}
+            <div class="switcher container-flex baby-date-wrapper">
                 <div class="switcher-contents" id="baby-age">
-                    <div class="switcher-content active-content" id="baby-age-chron">宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
-                    <div class="switcher-content" id="baby-age-corrected">宝宝现在是{{ baby_date.get_corrected_age_days|get_age_months }}</div>
+                    <div class="switcher-content active-content" id="baby-age-chron">宝宝实际月龄是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+                    <div class="switcher-content" id="baby-age-corrected">宝宝矫正月龄是{{ baby_date.get_corrected_age_days|get_age_months }}</div>
+                    <div class="switcher-content" id="baby-age-pma">宝宝妊娠起点总周龄是{{ baby_date|get_gestational_age_weeks:False }}</div>
                 </div>
                 <div class="switcher-buttons" id="baby-age-buttons">
                     <span class="switcher-button active-button" data-target="baby-age-chron">实际月龄</span>
                     <span class="switcher-button" data-target="baby-age-corrected">矫正月龄</span>
+                    <span class="switcher-button" data-target="baby-age-pma">PMA</span>
                 </div>
             </div>
-        {% else %}
-            {# 早产儿未足月 不显示矫正月龄 #}
-            <div>宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+            {% else %}
+            {# 早产儿未足月 显示实际月龄和PMA #}
+            <div class="switcher container-flex baby-date-wrapper">
+                <div class="switcher-contents" id="baby-age">
+                    <div class="switcher-content active-content" id="baby-age-chron">宝宝实际月龄是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+                    <div class="switcher-content" id="baby-age-pma">宝宝妊娠起点总周龄是{{ baby_date|get_gestational_age_weeks:False }}</div>
+                </div>
+                <div class="switcher-buttons" id="baby-age-buttons">
+                    <span class="switcher-button active-button" data-target="baby-age-chron">实际月龄</span>
+                    <span class="switcher-button" data-target="baby-age-pma">PMA</span>
+                </div>
+            </div>
         {% endif %}
     {% else %}
-        {# 正常足月的婴儿 不显示矫正月龄 #}
+        {# 正常足月的婴儿 仅显示实际月龄 #}
         <div>宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
     {% endif %}
 {% else %}

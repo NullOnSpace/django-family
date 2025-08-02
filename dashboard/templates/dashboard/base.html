@@ -84,6 +84,7 @@
 
         .switcher-content.active-content {
             display: inline-block;
+            padding: 5px 4px;
         }
 
         .switcher-content {
@@ -103,6 +104,16 @@
 
         .slight-padding {
             padding: 0.5rem 0;
+        }
+
+        .container-flex {
+            display: flex;
+            justify-content: space-between; /* 关键属性 */
+            width: 100%;
+        }
+
+        .baby-date-wrapper {
+            background-color: var(--bs-tertiary-bg);
         }
     </style>
     {% block style_links %}

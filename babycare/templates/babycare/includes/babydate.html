@@ -30,10 +30,10 @@
         {% endif %}
     {% else %}
         {# 正常足月的婴儿 仅显示实际月龄 #}
-        <div>宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
+        <div class="container-flex baby-date-wrapper">宝宝现在是{{ baby_date.get_chronological_age_days|get_age_months }}</div>
     {% endif %}
 {% else %}
-    <div class="switcher">
+    <div class="switcher container-flex baby-date-wrapper">
         <div class="switcher-contents" id="baby-ga">
             <div class="switcher-content active-content" id="baby-ga-lmp">宝宝现在是{{ baby_date|get_gestational_age_weeks:False }}</div>
             <div class="switcher-content" id="baby-ga-us">宝宝现在是{{ baby_date|get_gestational_age_weeks:True }}</div>

@@ -8,12 +8,17 @@
     <title>{% block title %}{% endblock %}</title>
     <style>
         #baby-ga,#baby-age {
-            display: inline-block;
+            /* display: inline-block; */
+            background-color: var(--bs-tertiary-bg);
         }
 
-        #baby-ga-buttons {
+        #baby-ga-buttons,#baby-age-buttons {
             display: inline-block;
-            margin-left: 10px;
+            /* margin-left: 10px; */
+        }
+
+        #baby-date-wrapper {
+            margin-top: 0.5rem;
         }
 
         #task-calendar {
@@ -61,7 +66,7 @@
         }
 
         .switcher-buttons {
-            display: inline-block;
+            /* display: inline-block; */
             border-radius: 5px;
             padding: 5px 4px;
             background-color: var(--bs-secondary-bg);
@@ -108,13 +113,8 @@
 
         .container-flex {
             display: flex;
-            justify-content: space-between; /* 关键属性 */
+            justify-content: space-between;
             width: 100%;
-        }
-
-        .baby-date-wrapper {
-            background-color: var(--bs-tertiary-bg);
-            margin-top: 0.5rem;
         }
     </style>
     {% block style_links %}
@@ -157,6 +157,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/switcher.js' %}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

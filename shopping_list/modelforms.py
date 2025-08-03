@@ -7,9 +7,9 @@ class ItemCategoryForm(forms.ModelForm):
         model = ItemCategory
         fields = ['name', 'status', 'note']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control smart-submit'}),
-            'status': forms.Select(attrs={'class': 'form-select smart-submit'}),
-            'note': forms.Textarea(attrs={'class': 'form-control smart-submit', 'rows': 2}),
+            'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            'status': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+            'note': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 2}),
         }
 
 class ItemRecordForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class ItemRecordForm(forms.ModelForm):
         model = ItemRecord
         fields = ['name', 'quantity', 'note']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control smart-submit'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control smart-submit', 'min': 1}),
-            'note': forms.Textarea(attrs={'class': 'form-control smart-submit', 'rows': 2}),
+            'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': 1}),
+            'note': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 2}),
         }

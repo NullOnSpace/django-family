@@ -1,0 +1,30 @@
+.switcher-buttons {
+    /* display: inline-block; */
+    border-radius: 5px;
+    padding: 5px 4px;
+    background-color: var(--bs-secondary-bg);
+    color: var(--bs-secondary-color);
+}
+
+.switcher-buttons:hover {
+    cursor: pointer;
+}
+
+.switcher-button.active-button {
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary);
+    border-radius: 5px;
+}
+
+.switcher-button {
+    padding: 5px 10px;
+}
+
+.switcher-content.active-content {
+    display: inline-block;
+    padding: 5px 4px;
+}
+
+.switcher-content {
+    display: none;
+}

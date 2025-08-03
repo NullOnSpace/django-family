@@ -10,16 +10,18 @@
 <h1>修改 {{shopping_list.name}}</h1>
 <div class="row">
     <div class="col-6">
-        <a class="link-primary" href="{% url 'shopping_list_detail' shopping_list.id %}">查看清单详情</a>
+        <button type="button" class="btn btn-link">
+            <a href="{% url 'shopping_list_detail' shopping_list.id %}">查看清单详情</a>
+        </button>
     </div>
-    <div class="col-6 text-end">
-        <a class="link-primary" href="">+ 新增品类</a>
+    <div class="col-6 text-end" id="add-new-category">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-item-category">+ 新增品类</button>
     </div>
 </div>
 <div class="item-cate-list">
     {% for cate, records in cates.items %}
         <div data-ss-id="{{ cate.id }}" data-ss-target="{% url 'ajax_change_item_category' %}">
-            <form onsubmit="return false;">
+            <form onsubmit="return false;" class="smart-submit">
                 {% for field, errors in cate.context.fields %}
                     <div class="row">
                         <div class="col-3">{% if field.label %}{{ field.label_tag }}{% endif %}</div>
@@ -35,7 +37,7 @@
         {% for record in records %}
         <div class="left-side-mark">
             <div data-ss-id="{{ record.id }}" data-ss-target="{% url 'ajax_change_item_record' %}">
-                <form onsubmit="return false;">
+                <form onsubmit="return false;" class="smart-submit">
                     {% for field, errors in record.context.fields %}
                         <div class="row">
                             <div class="col-3">{% if field.label %}{{ field.label_tag }}{% endif %}</div>
@@ -50,6 +52,26 @@
         <hr>
     {% endfor %}
 </div>
+<div class="modal fade" id="new-item-category" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">新增品类</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'fetch_add_item_category' shopping_list.id %}">
+            {{ item_category_form.as_p }}
+            {% csrf_token %}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button id="btn-add-category" type="button" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="messageBox" class="message-box alert"></div>
 {% endblock %}
 
@@ -59,4 +81,5 @@
 {% block scripts %}
 <script src="{% static 'js/message_box.js' %}"></script>
 <script src="{% static 'js/smart_submit.js' %}"></script>
+<script src="{% static 'js/shopping_list/modal.js' %}"></script>
 {% endblock %}

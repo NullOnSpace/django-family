@@ -1,0 +1,43 @@
+#task-calendar {
+    margin-top: 20px;
+    padding: 5px;
+    max-width: 300px;
+}
+
+ul#task-calendar-list {
+    list-style-type: none;
+    padding: 0;
+    background-color: var(--bs-light-bg-subtle);
+    border-radius: 5px;
+    border: 1px solid var(--bs-light-border-subtle);
+}
+
+li.task-calendar-item:first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+}
+
+li.task-calendar-item:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+li.task-calendar-item {
+    padding: 10px;
+}
+
+li.task-calendar-item.task-calendar-completed {
+    background-color: var(--bs-success-border-subtle);
+}
+
+li.task-calendar-item.task-calendar-outdated {
+    background-color: var(--bs-warning-border-subtle);
+}
+
+li.task-calendar-item.task-calendar-active {
+    background-color: var(--bs-primary-border-subtle);
+}
+
+li.task-calendar-item.task-calendar-coming {
+    background-color: var(--bs-body-bg);
+}

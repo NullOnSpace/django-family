@@ -20,8 +20,10 @@ def shopping_list_detail_inplace(request, shopping_list_id):
 
 
 def shopping_list_edit(request, shopping_list_id):
-    shopping_list = get_object_or_404(ShoppingList, id=shopping_list_id)
-    cates = dict()
+    context = dict()
+    context['shopping_list'] = shopping_list = get_object_or_404(
+        ShoppingList, id=shopping_list_id)
+    context['cates'] = cates = dict()
     for item_category in shopping_list.categories.all():  # type: ignore
         item_category.context = ItemCategoryForm(
             instance=item_category).get_context()
@@ -29,7 +31,30 @@ def shopping_list_edit(request, shopping_list_id):
         for record in item_category.items.all():
             record.context = ItemRecordForm(instance=record).get_context()
             records.append(record)
-    return render(request, 'shopping_list/shopping_list_edit.html', {'shopping_list': shopping_list, 'cates': cates})
+    context['item_category_form'] = ItemCategoryForm()
+    return render(request, 'shopping_list/shopping_list_edit.html', context)
+
+
+@require_POST
+def fetch_add_item_category(request, shopping_list_id):
+    res = dict()
+    try:
+        shopping_list = ShoppingList.objects.get(id=shopping_list_id)
+    except ShoppingList.DoesNotExist:
+        res['status'] = 'fail'
+        res['message'] = 'shopping list does not exist'
+    else:
+        print(request.POST)
+        form = ItemCategoryForm(request.POST)
+        if form.is_valid():
+            item_cate = form.save(commit=False)
+            item_cate.shopping_list = shopping_list
+            item_cate.save()
+            res['status'] = 'success'
+        else:
+            res['status'] = 'fail'
+            res['message'] = form.errors
+    return JsonResponse(res)
 
 
 @require_POST

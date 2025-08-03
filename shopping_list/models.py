@@ -25,6 +25,9 @@ class ItemCategory(models.Model):
         "状态", max_length=10, choices=STATUS_CHOICES, default='incomplete')
     note = models.TextField("备注", blank=True, null=True)
 
+    class Meta:
+        ordering = ['-status']
+
     def __str__(self):
         return f"{self.name} in {self.shopping_list.name}"
 

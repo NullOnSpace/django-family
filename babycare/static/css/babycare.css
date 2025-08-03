@@ -1,0 +1,15 @@
+#baby-ga,
+#baby-age {
+    /* display: inline-block; */
+    background-color: var(--bs-tertiary-bg);
+}
+
+#baby-ga-buttons,
+#baby-age-buttons {
+    display: inline-block;
+    /* margin-left: 10px; */
+}
+
+#baby-date-wrapper {
+    margin-top: 0.5rem;
+}

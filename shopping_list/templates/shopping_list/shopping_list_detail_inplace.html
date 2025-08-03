@@ -20,7 +20,7 @@
                     {% if forloop.first %}
                     <td class="display-input-toggle" rowspan="{{ cate.items.count }}">
                         <span class="display-value">{{ cate.get_status_display }}</span>
-                        <select name="item-category" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        <select name="item-category" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
                         {% for status, status_display in cate.STATUS_CHOICES %}
                             <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
                         {% endfor %}
@@ -28,28 +28,28 @@
                     </td>
                     <td class="display-input-toggle" rowspan="{{ cate.items.count }}">
                         <span class="display-value">{{ cate.name }}</span>
-                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
+                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
                         <i class="bi-plus-square modal-button add-record-button" data-bs-toggle="modal" data-bs-target="#item-record-add-modal" data-bs-cate-id="{{cate.id}}" style="font-size: 1rem; color: cornflowerblue;"></i>
                     </td>
                     {% endif %}
                     <td class="display-input-toggle">
                         <span class="display-value">{{ item_record.name }}</span>
-                        <input type="text" name="item-record-name" value="{{ item_record.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_name' %}">
+                        <input type="text" name="item-record-name" value="{{ item_record.name }}" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_name' %}">
                     </td>
                     <td class="display-input-toggle">
                         <span class="display-value">{{ item_record.quantity }}</span>
-                        <input type="number" name="item-record-quantity" value="{{ item_record.quantity }}"  class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_quantity' %}">
+                        <input type="number" name="item-record-quantity" value="{{ item_record.quantity }}"  class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_quantity' %}">
                     </td>
                     <td class="display-input-toggle">
                         <span class="display-value">{{ item_record.note }}</span>
-                        <input type="text" name="item-record-note" value="{{ item_record.note }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_note' %}">
+                        <input type="text" name="item-record-note" value="{{ item_record.note }}" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{item_record.id}}" data-target="{% url 'ajax_change_item_record_note' %}">
                     </td>
                 </tr>
             {% empty %}
                 <tr class="{{ cate.get_css_class }}" data-item-category-id="{{ cate.id }}">
                     <td class="display-input-toggle">
                         <span class="display-value">{{ cate.get_status_display }}</span>
-                        <select name="item-category" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
+                        <select name="item-category" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_status' %}">
                         {% for status, status_display in cate.STATUS_CHOICES %}
                             <option value="{{status}}" {% if status == cate.status %}selected{% endif %}>{{status_display}}</option>
                         {% endfor %}
@@ -57,7 +57,7 @@
                     </td>
                     <td class="display-input-toggle">
                         <span class="display-value">{{ cate.name }}</span>
-                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
+                        <input type="text" name="item-category-name" value="{{ cate.name }}" class="input-value form-control form-control-sm form-control form-control-sm-sm" style="display:none;" data-target-id="{{cate.id}}" data-target="{% url 'ajax_change_item_category_name' %}">
                         <i class="bi-plus-square modal-button add-record-button" data-bs-toggle="modal" data-bs-target="#item-record-add-modal" data-bs-cate-id="{{cate.id}}" style="font-size: 1rem; color: cornflowerblue;"></i>
                     </td>
                     <td></td>
@@ -80,11 +80,11 @@
         <form id="create-new-item-category" onsubmit="return false;">
           <div class="mb-3">
             <label for="item-category-name" class="col-form-label">品类名称:</label>
-            <input type="text" class="form-control" name="item_category_name" id="item-category-name">
+            <input type="text" class="form-control form-control-sm" name="item_category_name" id="item-category-name">
           </div>
           <div class="mb-3">
             <label for="item-category-note" class="col-form-label">备注</label>
-            <textarea class="form-control" name="item_category_note" id="item-category-note"></textarea>
+            <textarea class="form-control form-control-sm" name="item_category_note" id="item-category-note"></textarea>
           </div>
           <input type="hidden" id="shopping-list-id" name="shopping_list_id" value="{{ shopping_list.id }}">
           {% csrf_token %}
@@ -109,15 +109,15 @@
                 <form onsubmit="return false;" id="create-new-item-record">
                     <div class="mb-3">
                         <label for="item-name" class="col-form-label">单品名称:</label>
-                        <input type="text" class="form-control" name="item_name" id="item-name">
+                        <input type="text" class="form-control form-control-sm" name="item_name" id="item-name">
                     </div>
                     <div class="mb-3">
                         <label for="item-quantity" class="col-form-label">单品数量:</label>
-                        <input type="number" class="form-control" name="item_quantity" id="item-quantity" value="1">
+                        <input type="number" class="form-control form-control-sm" name="item_quantity" id="item-quantity" value="1">
                     </div>
                     <div class="mb-3">
                         <label for="item-record-note" class="col-form-label">备注</label>
-                        <textarea class="form-control" name="item_record_note" id="item-record-note"></textarea>
+                        <textarea class="form-control form-control-sm" name="item_record_note" id="item-record-note"></textarea>
                     </div>
                     <input type="hidden" id="item-category-id" name="item_category_id" value="">
                     {% csrf_token %}
@@ -135,5 +135,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'shopping_list/static/js/inplace_edit.js' %}"></script>
+<script src="{% static 'shopping_list/static/js/shopping_list/inplace_edit.js' %}"></script>
 {% endblock %}

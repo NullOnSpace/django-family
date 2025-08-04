@@ -15,12 +15,12 @@
         </button>
     </div>
     <div class="col-6 text-end" id="add-new-category">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-item-category">+ 新增品类</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-item-category">+ 新增品类</button>
     </div>
 </div>
 <div class="item-cate-list">
     {% for cate, records in cates.items %}
-        <div data-ss-id="{{ cate.id }}" data-ss-target="{% url 'ajax_change_item_category' %}">
+        <div data-ss-id="{{ cate.id }}" data-cate-name="{{ cate.name }}" data-ss-target="{% url 'ajax_change_item_category' %}">
             <form onsubmit="return false;" class="smart-submit">
                 {% for field, errors in cate.context.fields %}
                     <div class="row">
@@ -30,8 +30,9 @@
                 {% endfor %}
                 {% csrf_token %}
             </form>
-            <div class="slight-padding link-primary">
-                + 添加新单品
+            <div class="d-flex justify-content-between slight-margin">
+                <button class="btn btn-outline-primary btn-sm">+ 添加新单品</button>         
+                <button class="btn btn-outline-danger btn-sm del-cate-btn" data-bs-toggle="modal" data-bs-target="#del-item-category"><i class="bi-trash3"></i> 删除该品类</button>   
             </div>
         </div>
         {% for record in records %}
@@ -52,7 +53,7 @@
         <hr>
     {% endfor %}
 </div>
-<div class="modal fade" id="new-item-category" aria-hidden="true">
+<div class="modal fade" id="add-item-category" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -68,6 +69,26 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
         <button id="btn-add-category" type="button" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="del-item-category" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">删除品类<span id="to-del-cate-name"></span></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'fetch_del_item_category' %}">
+            <input type="hidden" name="id">
+            {% csrf_token %}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button id="btn-del-category" type="button" class="btn btn-primary">确定</button>
       </div>
     </div>
   </div>

@@ -58,6 +58,24 @@ def fetch_add_item_category(request, shopping_list_id):
 
 
 @require_POST
+def fetch_del_item_category(request):
+    res = dict()
+    try:
+        pk = request.POST['id']
+        item_category = ItemCategory.objects.get(id=pk)
+    except KeyError:
+        res['status'] = 'fail'
+        res['message'] = 'no cate id in post'
+    except ItemCategory.DoesNotExist:
+        res['status'] = 'fail'
+        res['message'] = 'shopping list does not exist'
+    else:
+        item_category.delete()
+        res['status'] = 'success'
+    return JsonResponse(res)
+
+
+@require_POST
 def ajax_change_item_category(request):
     item_category_id = request.POST.get('id')
     print(f"Received {request.POST}")

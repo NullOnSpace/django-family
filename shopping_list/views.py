@@ -32,6 +32,7 @@ def shopping_list_edit(request, shopping_list_id):
             record.context = ItemRecordForm(instance=record).get_context()
             records.append(record)
     context['item_category_form'] = ItemCategoryForm()
+    context['item_record_form'] = ItemRecordForm()
     return render(request, 'shopping_list/shopping_list_edit.html', context)
 
 
@@ -71,6 +72,49 @@ def fetch_del_item_category(request):
         res['message'] = 'shopping list does not exist'
     else:
         item_category.delete()
+        res['status'] = 'success'
+    return JsonResponse(res)
+
+
+@require_POST
+def fetch_add_item_record(request):
+    res = dict()
+    try:
+        pk = request.POST['cate_id']
+        item_category = ItemCategory.objects.get(id=pk)
+    except KeyError:
+        res['status'] = 'fail'
+        res['message'] = 'no cate id in post'
+    except ItemCategory.DoesNotExist:
+        res['status'] = 'fail'
+        res['message'] = 'item category does not exist'
+    else:
+        form = ItemRecordForm(request.POST)
+        if form.is_valid():
+            res['status'] = 'success'
+            record: ItemRecord = form.save(commit=False)
+            record.category = item_category
+            record.save()
+        else:
+            res['status'] = 'fail'
+            res['message'] = form.errors
+    return JsonResponse(res)
+
+
+@require_POST
+def fetch_del_item_record(request):
+    res = dict()
+    try:
+        pk = request.POST['id']
+        item_record = ItemRecord.objects.get(id=pk)
+    except KeyError:
+        res['status'] = 'fail'
+        res['message'] = 'no record id in post'
+    except ItemRecord.DoesNotExist:
+        res['status'] = 'fail'
+        res['message'] = 'item record does not exist'
+    else:
+        item_record.delete()
         res['status'] = 'success'
     return JsonResponse(res)
 

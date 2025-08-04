@@ -34,10 +34,10 @@ class ItemCategory(models.Model):
     def get_css_class(self):
         """Return a CSS class based on the status."""
         return {
-            'incomplete': 'table-light',
+            'incomplete': 'table-info',
             'complete': 'table-success',
-            'cancelled': 'table-dark',
-            'delayed': 'table-primary',
+            'cancelled': 'table-danger',
+            'delayed': 'table-warning',
         }.get(self.status, 'table-primary')
 
 

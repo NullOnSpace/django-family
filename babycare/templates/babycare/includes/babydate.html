@@ -4,7 +4,7 @@
         {% if baby_date.days_to_due < 0 %}
             {# 早产儿足月 显示矫正月龄、PMA以及实际月龄 #}
             <div id="baby-date-wrapper" class="switcher">
-                <div class="switcher-buttons" id="baby-age-buttons">
+                <div class="switcher-buttons d-inline-flex" id="baby-age-buttons">
                     <span class="switcher-button active-button" data-target="baby-age-chron">实际月龄</span>
                     <span class="switcher-button" data-target="baby-age-corrected">矫正月龄</span>
                     <span class="switcher-button" data-target="baby-age-pma">PMA</span>
@@ -18,7 +18,7 @@
             {% else %}
             {# 早产儿未足月 显示实际月龄和PMA #}
             <div id="baby-date-wrapper" class="switcher">
-                <div class="switcher-buttons" id="baby-age-buttons">
+                <div class="switcher-buttons d-inline-flex" id="baby-age-buttons">
                     <span class="switcher-button active-button" data-target="baby-age-chron">实际月龄</span>
                     <span class="switcher-button" data-target="baby-age-pma">PMA</span>
                 </div>
@@ -34,7 +34,7 @@
     {% endif %}
 {% else %}
     <div id="baby-date-wrapper" class="switcher">
-        <div class="switcher-buttons" id="baby-ga-buttons">
+        <div class="switcher-buttons d-inline-flex" id="baby-ga-buttons">
             <span class="switcher-button active-button" data-target="baby-ga-lmp">LMP估算</span>
             <span class="switcher-button" data-target="baby-ga-us">超声估算</span>
         </div>

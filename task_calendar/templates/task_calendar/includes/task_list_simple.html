@@ -1,4 +1,3 @@
-{% if task_calendars %}
 <ul id="task-calendar-list" data-change-status-url="{% url 'fetch_change_task_status' %}">
     {% for task in task_calendars %}
     <li class="task-calendar-item {{task.get_display_class}}" data-id="{{ task.id }}" data-status="{{ task.is_completed|yesno:'true,false,maybe' }}">
@@ -7,4 +6,3 @@
     </li>
     {% endfor %}
 </ul>
-{% endif %}

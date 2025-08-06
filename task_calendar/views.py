@@ -1,10 +1,11 @@
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 
 from .models import TaskCalendar
+from .modelforms import TaskCalendarForm
 
 
 # Create your views here.
@@ -57,3 +58,14 @@ def fetch_delete_task(request: HttpRequest, task_id) -> JsonResponse:
         res['status'] = 'error'
         res['message'] = str(e)
     return JsonResponse(res)
+
+
+@require_POST
+def create_task(request: HttpRequest) -> HttpResponse:
+    form = TaskCalendarForm(request.POST)
+    if form.is_valid():
+        task = form.save(commit=False)
+        if request.user.is_authenticated:
+            task.create_by = request.user
+            task.save()
+    return redirect('dashboard:index')

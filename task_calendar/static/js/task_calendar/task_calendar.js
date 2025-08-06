@@ -82,4 +82,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // 创建任务
+    const createTaskButton = document.getElementById('task-calendar-create-submit');
+    // 点击创建任务按钮时提交表单
+    if (createTaskButton) {
+        createTaskButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            const form = document.querySelector('#create-task-calendar-modal form');
+            if (form) {
+                form.submit();
+            } else {
+                console.error('Form not found for task creation');
+            }
+        });
+    } else {
+        console.error('Create task button not found');
+    }
 });

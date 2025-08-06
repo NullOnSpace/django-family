@@ -26,11 +26,6 @@
             margin-top: 0.5rem;
         }
 
-        .container-flex {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
     </style>
     {% block style_links %}
     {% endblock %}
@@ -43,7 +38,6 @@
 <body>
     <div class="container">
         <div class="row">
-
             <div class="col-lg-8 col-md-12">
                 <main>
                     {% block main %}
@@ -53,20 +47,45 @@
             <div class="col-lg-4 col-md-12">
                 <aside>
                     {% block aside %}
-                        <section id="task-calendar">
-                <h3>近期安排</h3>
-                {% include "task_calendar/includes/task_list_simple.html" %}
-                </section>
-                <section id="shopping-list">
-                    <h3>清单</h3>
-                    <ul id="shopping-lists">
-                        {% for list in shopping_lists %}
-                        <li class="shopping-list"><a href="{% url 'shopping_list_detail' list.id %}">{{list.name}}</a></li>
-                        {% empty %}
-                        <li>清单为空</li>
-                        {% endfor %}
-                    </ul>
-                </section>
+                    <section id="task-calendar" class="slight-margin">
+                        <h3>近期安排</h3>
+                        <div><button type="button" id="create-task-calendar" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-task-calendar-modal">+ 添加安排</button></div>
+                        {% if task_calendars %}
+                            {% include "task_calendar/includes/task_list_simple.html" %}
+                        {% else %}
+                            <div class="lead">暂无安排</div>
+                        {% endif %}
+                        <div class="modal fade" tabindex="-1" id="create-task-calendar-modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">新增安排</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'create_task' %}" method="post">
+                                        {{ task_form.as_p }}
+                                        {% csrf_token %}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                    <button id="task-calendar-create-submit" type="button" class="btn btn-primary">确认</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="shopping-list" class="slight-margin">
+                        <h3>清单</h3>
+                        <ul id="shopping-lists">
+                            {% for list in shopping_lists %}
+                            <li class="shopping-list"><a href="{% url 'shopping_list_detail' list.id %}">{{list.name}}</a></li>
+                            {% empty %}
+                            <li>清单为空</li>
+                            {% endfor %}
+                        </ul>
+                    </section>
                     {% endblock %}
                 </aside>
             </div>

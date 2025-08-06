@@ -8,6 +8,8 @@ ul#task-calendar-list {
     margin-top: 20px;
     list-style-type: none;
     padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
     /* background-color: var(--bs-light-bg-subtle);
     border-radius: 5px;
     border: 1px solid var(--bs-light-border-subtle); */
@@ -24,8 +26,8 @@ li.task-calendar-item:last-child {
 } */
 
 li.task-calendar-item {
-    padding: 10px;
-    margin-top: 5px;
+    padding: 5px;
+    margin-top: 2px;
     border: 1px solid transparent;
     border-radius: 5px;
 }

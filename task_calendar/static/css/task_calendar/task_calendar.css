@@ -8,12 +8,12 @@ ul#task-calendar-list {
     margin-top: 20px;
     list-style-type: none;
     padding: 0;
-    background-color: var(--bs-light-bg-subtle);
+    /* background-color: var(--bs-light-bg-subtle);
     border-radius: 5px;
-    border: 1px solid var(--bs-light-border-subtle);
+    border: 1px solid var(--bs-light-border-subtle); */
 }
 
-li.task-calendar-item:first-child {
+/* li.task-calendar-item:first-child {
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
 }
@@ -21,10 +21,13 @@ li.task-calendar-item:first-child {
 li.task-calendar-item:last-child {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
-}
+} */
 
 li.task-calendar-item {
     padding: 10px;
+    margin-top: 5px;
+    border: 1px solid transparent;
+    border-radius: 5px;
 }
 
 li.task-calendar-item.task-calendar-completed {

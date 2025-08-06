@@ -2,7 +2,7 @@
 <ul id="task-calendar-list" data-change-status-url="{% url 'fetch_change_task_status' %}">
     {% for task in task_calendars %}
     <li class="task-calendar-item {{task.get_display_class}}" data-id="{{ task.id }}" data-status="{{ task.is_completed|yesno:'true,false,maybe' }}">
-        <div class="d-flex justify-content-between"><div><strong>{{ task.description }}</strong></div><div><small class="task-status"><i class="bi-{% if task.is_completed %}check-square{% else %}square{% endif %}"></i><span class="status-text">{{ task.get_status }}</span></small> <small class="del-task"><i class="bi-trash"></i>删除</small></div></div>
+        <div class="d-flex justify-content-between"><div><strong>{{ task.description }}</strong></div><div><small class="task-status"><i class="bi-{% if task.is_completed %}check-square{% else %}square{% endif %}"></i><span class="status-text">{{ task.get_status }}</span></small> <small class="del-task" data-del-url="{% url 'fetch_delete_task' task.id %}"><i class="bi-trash"></i>删除</small></div></div>
         <div><small>{{ task.start_date|date:"Y年m月d日" }}{% if task.end_date %} 至 {{ task.end_date|date:"Y年m月d日" }}{% endif %}</small></div>
     </li>
     {% endfor %}

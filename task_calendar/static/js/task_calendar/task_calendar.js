@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // 切换任务状态
     const taskStatusChangeButtons = document.querySelectorAll('.task-status');
     const STATUS_CLASSES = ['task-calendar-completed', 'task-calendar-outdated', 'task-calendar-active', 'task-calendar-coming'];
     taskStatusChangeButtons.forEach(button => {
@@ -51,6 +52,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => console.error('Fetch error:', error));
+        });
+    });
+    // 删除任务
+    const deleteTaskButtons = document.querySelectorAll('.del-task');
+    deleteTaskButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const parentNode = this.closest('.task-calendar-item');
+            const delUrl = this.dataset.delUrl;
+
+            if (confirm('确定要删除这个任务吗？')) {
+                fetch(delUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        parentNode.remove();
+                        console.log('Task deleted successfully');
+                    } else {
+                        console.error('Error deleting task:', data.message);
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+            }
         });
     });
 });

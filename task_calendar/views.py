@@ -40,3 +40,20 @@ def fetch_change_task_status(request: HttpRequest) -> JsonResponse:
             res['status'] = 'error'
             res['message'] = str(e)
     return JsonResponse(res)
+
+
+@require_POST
+def fetch_delete_task(request: HttpRequest, task_id) -> JsonResponse:
+    res = dict()
+    try:
+        task = TaskCalendar.objects.get(id=task_id)
+        task.delete()
+        res['status'] = 'success'
+        res['message'] = '删除成功'
+    except TaskCalendar.DoesNotExist:
+        res['status'] = 'error'
+        res['message'] = 'task id not found'
+    except Exception as e:
+        res['status'] = 'error'
+        res['message'] = str(e)
+    return JsonResponse(res)

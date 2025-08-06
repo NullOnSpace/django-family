@@ -37,7 +37,7 @@ class BabyDate(models.Model):
         if self.last_menstrual_period > date:
             raise EarlierThanLMPError(
                 f"The date: {date} is earlier than the last menstrual period{self.last_menstrual_period}.")
-        return (date - self.last_menstrual_period).days
+        return (date - self.last_menstrual_period).days + 1
 
     def get_gestational_age_days(self, date:  datetime.date | None = None, ultrasound_fixed: bool = False) -> int:
         """
@@ -68,7 +68,7 @@ class BabyDate(models.Model):
         if self.birthday is None or date < self.birthday.date():
             raise NotBornError(
                 f"The date for PMA: {date} is earlier than the birthday: {self.birthday}.")
-        return (date - self.last_menstrual_period).days
+        return (date - self.last_menstrual_period).days + 1
 
     def get_chronological_age_days(self, date: datetime.date | None = None) -> int:
         """
@@ -83,7 +83,7 @@ class BabyDate(models.Model):
             raise NotBornError(
                 f"The date for chronological age: {date} is earlier than the birthday: {self.birthday}.")
         else:
-            return (date - self.birthday.date()).days  # type: ignore
+            return (date - self.birthday.date()).days + 1 # type: ignore
 
     def get_corrected_age_days(self, date: datetime.date | None = None) -> int:
         """
@@ -98,7 +98,7 @@ class BabyDate(models.Model):
             date = timezone.now().date()
         if self.is_born(date):
             if self.is_preterm():
-                return -self.days_to_due(date)
+                return -self.days_to_due(date) + 1
             else:
                 return self.get_chronological_age_days(date)
         else:

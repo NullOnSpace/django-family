@@ -10,12 +10,12 @@ class BabyDateTestCase(TestCase):
             last_menstrual_period=timezone.now().date() - timezone.timedelta(days=30),
         )
         # Test with current date
-        self.assertEqual(baby_date.get_gestational_age_days(), 30)
+        self.assertEqual(baby_date.get_gestational_age_days(), 31)
 
         # Test with ultrasound fixed days
         baby_date.ultrasound_fixed_days = 5
         self.assertEqual(baby_date.get_gestational_age_days(
-            ultrasound_fixed=True), 25)
+            ultrasound_fixed=True), 26)
 
         # Test with a date before the last menstrual period
         date_earlier = timezone.now().date() - timezone.timedelta(days=32)
@@ -29,12 +29,12 @@ class BabyDateTestCase(TestCase):
             birthday=birthday
         )
         # Test with a date after the birthday
-        self.assertEqual(baby_date.get_gestational_age_days(), 270)
+        self.assertEqual(baby_date.get_gestational_age_days(), 271)
 
         # Test with a date before the birthday
         date_before_birthday = (birthday - timezone.timedelta(days=5)).date()
         self.assertEqual(baby_date.get_gestational_age_days(
-            date_before_birthday), 255)
+            date_before_birthday), 256)
 
     def test_get_postmenstrual_age_days(self):
         baby_date = BabyDate(
@@ -52,7 +52,7 @@ class BabyDateTestCase(TestCase):
             baby_date.get_postmenstrual_age_days(date_earlier)
 
         # Test with current date after birthday
-        self.assertEqual(baby_date.get_postmenstrual_age_days(), 281)
+        self.assertEqual(baby_date.get_postmenstrual_age_days(), 282)
 
     def test_get_chronological_age_days(self):
         baby_date = BabyDate(
@@ -74,7 +74,7 @@ class BabyDateTestCase(TestCase):
                                timezone.timedelta(days=5)).date()
         self.assertEqual(
             baby_date.get_chronological_age_days(date_after_birthday),
-            5
+            6
         )
 
     def test_get_corrected_age_days_with_term_baby(self):
@@ -98,7 +98,7 @@ class BabyDateTestCase(TestCase):
                                timezone.timedelta(days=5)).date()
         self.assertEqual(
             baby_date.get_corrected_age_days(date_after_birthday),
-            5
+            6
         )
 
     def test_get_corrected_age_days_with_preterm_baby(self):
@@ -111,11 +111,11 @@ class BabyDateTestCase(TestCase):
         date_after_birthday = (birthday + timezone.timedelta(days=5)).date()
         self.assertEqual(
             baby_date.get_corrected_age_days(date_after_birthday),
-            -25  # 300 - 50 = 250, so corrected age is 5 - (280 - 250) = -25
+            -24  # 300 - 50 = 250, so corrected age is 5 - (280 - 250) = -25
         )
 
         date_after_due = baby_date.get_due_date() + timezone.timedelta(days=5)
         self.assertEqual(
             baby_date.get_corrected_age_days(date_after_due),
-            5
+            6
         )

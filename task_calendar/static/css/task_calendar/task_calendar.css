@@ -41,3 +41,11 @@ li.task-calendar-item.task-calendar-active {
 li.task-calendar-item.task-calendar-coming {
     background-color: var(--bs-body-bg);
 }
+
+.task-status {
+    cursor: pointer;
+}
+
+.del-task {
+    cursor: pointer;
+}

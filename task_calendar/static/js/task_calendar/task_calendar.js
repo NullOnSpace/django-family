@@ -96,7 +96,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Form not found for task creation');
             }
         });
-    } else {
-        console.error('Create task button not found');
     }
 });

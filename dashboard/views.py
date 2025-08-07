@@ -19,4 +19,5 @@ def index(request: HttpRequest) -> HttpResponse:
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')
     context['task_form'] = TaskCalendarForm()
     context['shopping_lists'] = ShoppingList.objects.all()
+    context['active'] = 'index'  # Set the active tab for the navigation bar
     return render(request, 'dashboard/index.html', context)

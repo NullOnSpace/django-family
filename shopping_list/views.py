@@ -9,8 +9,11 @@ from .modelforms import ItemCategoryForm, ItemRecordForm
 
 
 def shopping_list_detail(request, shopping_list_id):
-    shopping_list = get_object_or_404(ShoppingList, id=shopping_list_id)
-    return render(request, 'shopping_list/shopping_list_detail.html', {'shopping_list': shopping_list})
+    context = dict()
+    context['shopping_list'] = get_object_or_404(
+        ShoppingList, id=shopping_list_id)
+    context['active'] = 'list'
+    return render(request, 'shopping_list/shopping_list_detail.html', context)
 
 
 # 弃用的原地编辑表格的视图函数
@@ -33,6 +36,7 @@ def shopping_list_edit(request, shopping_list_id):
             records.append(record)
     context['item_category_form'] = ItemCategoryForm()
     context['item_record_form'] = ItemRecordForm()
+    context['active'] = 'list'
     return render(request, 'shopping_list/shopping_list_edit.html', context)
 
 

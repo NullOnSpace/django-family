@@ -1,0 +1,13 @@
+.left-side-mark {
+    margin-top: 1rem;
+    border-left: 1rem solid var(--bs-primary);
+    padding-left: 1rem;
+}
+
+.slight-padding {
+    padding: 0.5rem 0;
+}
+
+.slight-margin {
+    margin-top: 0.5rem;
+}

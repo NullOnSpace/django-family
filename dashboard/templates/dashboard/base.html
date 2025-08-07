@@ -6,36 +6,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <style>
-        .left-side-mark {
-            margin-top: 1rem;
-            border-left: 1rem solid var(--bs-primary);
-            padding-left: 1rem;
-        }
-
-        .item-cate-list form {
-            margin-top: 1rem;
-            line-height: 2.5rem;
-        }
-
-        .slight-padding {
-            padding: 0.5rem 0;
-        }
-
-        .slight-margin {
-            margin-top: 0.5rem;
-        }
-
-    </style>
     {% block style_links %}
     {% endblock %}
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/switcher.css' %}">
     <link rel="stylesheet" href="{% static 'css/task_calendar/task_calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/babycare/babycare.css' %}">
 </head>
 
 <body>
+    {% block navbar %}
+    <nav class="navbar bg-body-tertiary navbar-expand-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard:index' %}">图标</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">导航</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link {% if active == 'index' %}active{% endif %}" href="{% url 'dashboard:index' %}">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active == 'babycare' %}active{% endif %}" href="#">数据</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active == 'list' %}active{% endif %}" href="#">清单</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active == 'task' %}active{% endif %}" href="#">计划</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            用户
+                            </a>
+                            <ul class="dropdown-menu">
+                            <!-- <li><a class="dropdown-item" href="#">Action</a></li> -->
+                            <li><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="dropdown-item" type="submit">登出</button></form></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-12">
@@ -48,18 +73,18 @@
                 <aside>
                     {% block aside %}
                     <section id="task-calendar" class="slight-margin">
-                        <h3>近期安排</h3>
-                        <div><button type="button" id="create-task-calendar" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-task-calendar-modal">+ 添加安排</button></div>
+                        <h3>近期计划</h3>
+                        <div><button type="button" id="create-task-calendar" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-task-calendar-modal">+ 添加计划</button></div>
                         {% if task_calendars %}
                             {% include "task_calendar/includes/task_list_simple.html" %}
                         {% else %}
-                            <div class="lead">暂无安排</div>
+                            <div class="lead">暂无计划</div>
                         {% endif %}
                         <div class="modal fade" tabindex="-1" id="create-task-calendar-modal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">新增安排</h5>
+                                    <h5 class="modal-title">新增计划</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

@@ -1,4 +1,5 @@
 {% load babycare_tags %}
+<div id="baby-date">
 {% if baby_date.is_born %}
     {% if baby_date.is_preterm %}
         {% if baby_date.days_to_due < 0 %}
@@ -47,3 +48,4 @@
         <div>距离预产期{{baby_date.estimated_due_date|date:"Y年m月d日"}}{% if dtd >= 0%}还有{{ baby_date.days_to_due }}{% else %}已经过了{{ baby_date.days_to_due|cut:"-" }}{% endif %}天</div>
     {% endwith %}
 {% endif %}
+</div>

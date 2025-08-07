@@ -1,6 +1,6 @@
 #baby-ga,
 #baby-age {
-    /* display: inline-block; */
+    display: inline-block;
     background-color: var(--bs-tertiary-bg);
 }
 
@@ -11,5 +11,9 @@
 }
 
 #baby-date-wrapper {
+    margin-top: 0.5rem;
+}
+
+#baby-date {
     margin-top: 0.5rem;
 }

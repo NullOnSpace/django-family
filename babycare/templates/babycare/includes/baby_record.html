@@ -129,7 +129,7 @@
                     <tbody>
                         {% for growth in growth_data %}
                             <tr>
-                                <td>{{ growth.date|date:"Y年m月d日 H:i" }}</td>
+                                <td>{{ growth.date|date:"Y年m月d日" }}</td>
                                 <td>{{ growth.weight|default:"-" }}</td>
                                 <td>{{ growth.height|default:"-" }}</td>
                                 <td>{{ growth.head_circumference|default:"-" }}</td>

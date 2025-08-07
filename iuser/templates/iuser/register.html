@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+    {% block title %}注册{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block main %}
+<div class="module container">
+    <p>注册用户</p>
+    <div class="login-form">
+        <form action="{% url 'register' %}" method="post" class="form-control">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <p class="d-grid gap-2"><input type="submit" class="btn btn-primary" value="创建账户"></p>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block aside %}
+{% endblock %}

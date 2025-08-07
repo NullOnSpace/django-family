@@ -230,7 +230,7 @@ class BodyTemperature(models.Model):
 class GrowthData(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='growth_data')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     weight = models.FloatField(blank=True, null=True)  # 体重，单位为千克
     height = models.FloatField(blank=True, null=True)  # 身高，单位为厘米
     head_circumference = models.FloatField(blank=True, null=True)  # 头围，单位为厘米

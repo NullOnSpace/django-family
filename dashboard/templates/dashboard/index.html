@@ -3,5 +3,11 @@
 {% block title %}主页{% endblock %}
 
 {% block main %}
+<section>
     {% include "babycare/includes/babydate.html" %}
+</section>
+<section>
+    <h2>照料记录</h2>
+    {% include "babycare/includes/baby_record.html" %}
+</section>
 {% endblock %}

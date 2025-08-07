@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 
-from babycare.models import BabyDate
+from babycare.models import BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData
+from babycare.modelforms import FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm
 from task_calendar.models import TaskCalendar
 from task_calendar.modelforms import TaskCalendarForm
 from shopping_list.models import ShoppingList
@@ -19,5 +20,13 @@ def index(request: HttpRequest) -> HttpResponse:
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')
     context['task_form'] = TaskCalendarForm()
     context['shopping_lists'] = ShoppingList.objects.all()
+    context['feedings'] = Feeding.objects.all().order_by('-date')
+    context['feeding_form'] = FeedingForm()
+    context['breast_bumps'] = BreastBumping.objects.all().order_by('-date')
+    context['breast_bumping_form'] = BreastBumpingForm()
+    context['body_temperatures'] = BodyTemperature.objects.all().order_by('-date')
+    context['body_temperature_form'] = BodyTemperatureForm()
+    context['growth_data'] = GrowthData.objects.all().order_by('-date')
+    context['growth_data_form'] = GrowthDataForm()
     context['active'] = 'index'  # Set the active tab for the navigation bar
     return render(request, 'dashboard/index.html', context)

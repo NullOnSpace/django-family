@@ -23,4 +23,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('shopping_list/', include('shopping_list.urls')),
     path('task_calendar/', include('task_calendar.urls')),
+    path('babycare/', include('babycare.urls')),
 ]

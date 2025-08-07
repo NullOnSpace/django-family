@@ -1,0 +1,139 @@
+<div id="baby-record-wrapper" class="switcher">
+    <div class="switcher-buttons d-inline-flex" id="baby-record-buttons">
+        <span class="switcher-button active-button" data-target="baby-feeding">喂奶量</span>
+        <span class="switcher-button" data-target="breast-bumping">母乳收集</span>
+        <span class="switcher-button" data-target="body-temperature">体温</span>
+        <span class="switcher-button" data-target="growth-data">生长数据</span>
+    </div>
+    <div class="switcher-contents" id="baby-record-contents">
+        <div class="switcher-content active-content" id="baby-feeding">
+            <div>
+                <form action="{% url 'fetch_submit_feeding' %}" method="post">
+                {{ feeding_form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>喂奶时间</th>
+                        <th>喂奶量</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feeding in feedings %}
+                        <tr>
+                            <td>{{ feeding.date|date:"Y年m月d日 H:i" }}</td>
+                            <td>{{ feeding.amount }} ml</td>
+                            <td>{{ feeding.note }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">暂无喂奶记录</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="switcher-content" id="breast-bumping">
+            <div>
+                <form action="{% url 'fetch_submit_breast_bumping' %}" method="post">
+                {{ breast_bumping_form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>收集时间</th>
+                        <th>收集量</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for breast_bump in breast_bumps %}
+                        <tr>
+                            <td>{{ breast_bump.date|date:"Y年m月d日 H:i" }}</td>
+                            <td>{{ breast_bump.amount }} ml</td>
+                            <td>{{ breast_bump.note }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">暂无母乳收集记录</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="switcher-content" id="body-temperature">
+            <div>
+                <form action="{% url 'fetch_submit_body_temperature' %}" method="post">
+                {{ body_temperature_form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>测量时间</th>
+                        <th>体温 (°C)</th>
+                        <th>测量方式</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for body_temp in body_temperatures %}
+                        <tr>
+                            <td>{{ body_temp.date|date:"Y年m月d日 H:i" }}</td>
+                            <td>{{ body_temp.temperature }}</td>
+                            <td>{{ body_temp.get_measurement_display }}</td>
+                            <td>{{ body_temp.notes }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">暂无体温记录</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="switcher-content" id="growth-data">
+            <div>
+                <form action="{% url 'fetch_submit_growth_data' %}" method="post">
+                {{ growth_data_form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>记录时间</th>
+                        <th>体重 (kg)</th>
+                        <th>身高 (cm)</th>
+                        <th>头围 (cm)</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for growth in growth_data %}
+                        <tr>
+                            <td>{{ growth.date|date:"Y年m月d日 H:i" }}</td>
+                            <td>{{ growth.weight }}</td>
+                            <td>{{ growth.height }}</td>
+                            <td>{{ growth.head_circumference }}</td>
+                            <td>{{ growth.notes }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">暂无生长数据记录</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>

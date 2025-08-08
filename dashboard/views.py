@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
 
 from babycare.models import BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData
 from babycare.modelforms import FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm
@@ -15,6 +15,8 @@ def index(request: HttpRequest) -> HttpResponse:
     This view handles the request to the dashboard's main page and returns
     the rendered HTML template.
     """
+    if request.user.is_anonymous:
+        raise Http404("Page not found")
     context = dict()
     context['baby_date'] = BabyDate.objects.first()
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')

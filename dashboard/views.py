@@ -16,7 +16,7 @@ def index(request: HttpRequest) -> HttpResponse:
     the rendered HTML template.
     """
     if request.user.is_anonymous:
-        raise Http404("Page not found")
+        return render(request, 'dashboard/public_index.html')
     context = dict()
     context['baby_date'] = BabyDate.objects.first()
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')

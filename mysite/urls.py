@@ -21,7 +21,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='home'),
     path('0725accounts/', include('iuser.urls')),
-    path('admin/', admin.site.urls),
+    path('zh/admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
     path('shopping_list/', include('shopping_list.urls')),
     path('task_calendar/', include('task_calendar.urls')),

@@ -19,3 +19,18 @@ section {
 #main-container {
     margin-top: 3.5rem;
 }
+
+.unobvious-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;    
+    user-select: none;
+    box-sizing: border-box;
+    white-space: nowrap;
+    padding-block: 0px;
+    padding-inline: 0px;
+    border-width: 0px;
+    border-style: none;
+    border-color: transparent;
+    border-image: initial;
+}

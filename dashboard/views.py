@@ -31,4 +31,8 @@ def index(request: HttpRequest) -> HttpResponse:
     context['growth_data'] = GrowthData.objects.all().order_by('-date')
     context['growth_data_form'] = GrowthDataForm()
     context['active'] = 'index'  # Set the active tab for the navigation bar
+    if request.GET.get('babycare_active'):
+        context['babycare_active'] = request.GET.get('babycare_active')
+    else:
+        context['babycare_active'] = 'baby-feeding'
     return render(request, 'dashboard/index.html', context)

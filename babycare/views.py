@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from babycare.models import BabyDate
@@ -21,7 +22,9 @@ def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:
         feeding.save()
     else:
         print(form.errors)
-    return redirect('dashboard:index')
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=baby-feeding'
+    return HttpResponseRedirect(url)
 
 
 @require_POST
@@ -37,7 +40,9 @@ def fetch_submit_breast_bumping(request: HttpRequest) -> HttpResponse:
         breast_bumping.save()
     else:
         print(form.errors)
-    return redirect('dashboard:index')
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=breast-bumping'
+    return HttpResponseRedirect(url)
 
 
 @require_POST
@@ -53,7 +58,9 @@ def fetch_submit_body_temperature(request: HttpRequest) -> HttpResponse:
         body_temperature.save()
     else:
         print(form.errors)
-    return redirect('dashboard:index')
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=body-temperature'
+    return HttpResponseRedirect(url)
 
 
 @require_POST
@@ -69,4 +76,6 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
         growth_data.save()
     else:
         print(form.errors)
-    return redirect('dashboard:index')
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=growth-data'
+    return HttpResponseRedirect(url)

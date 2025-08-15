@@ -1,12 +1,12 @@
-<div id="baby-record-wrapper" class="switcher">
+<div id="baby-record-wrapper" class="switcher" data-switcher-name="babycare">
     <div class="switcher-buttons d-inline-flex" id="baby-record-buttons">
-        <span class="switcher-button active-button" data-target="baby-feeding">喂奶量</span>
-        <span class="switcher-button" data-target="breast-bumping">母乳收集</span>
-        <span class="switcher-button" data-target="body-temperature">体温</span>
-        <span class="switcher-button" data-target="growth-data">生长数据</span>
+        <span class="switcher-button{% if babycare_active == 'baby-feeding' %} active-button{% endif %}" data-target="baby-feeding">喂奶量</span>
+        <span class="switcher-button{% if babycare_active == 'breast-bumping' %} active-button{% endif %}" data-target="breast-bumping">母乳收集</span>
+        <span class="switcher-button{% if babycare_active == 'body-temperature' %} active-button{% endif %}" data-target="body-temperature">体温</span>
+        <span class="switcher-button{% if babycare_active == 'growth-data' %} active-button{% endif %}" data-target="growth-data">生长数据</span>
     </div>
     <div class="switcher-contents" id="baby-record-contents">
-        <div class="switcher-content active-content container" id="baby-feeding">
+        <div class="switcher-content{% if babycare_active == 'baby-feeding' %} active-content{% endif %} container" id="baby-feeding">
             <div>
                 <form action="{% url 'fetch_submit_feeding' %}" method="post">
                 {{ feeding_form.as_p }}
@@ -39,7 +39,7 @@
                 </table>
             </div>
         </div>
-        <div class="switcher-content container" id="breast-bumping">
+        <div class="switcher-content{% if babycare_active == 'breast-bumping' %} active-content{% endif %} container" id="breast-bumping">
             <div>
                 <form action="{% url 'fetch_submit_breast_bumping' %}" method="post">
                 {{ breast_bumping_form.as_p }}
@@ -72,7 +72,7 @@
                 </table>
             </div>
         </div>
-        <div class="switcher-content container" id="body-temperature">
+        <div class="switcher-content{% if babycare_active == 'body-temperature' %} active-content{% endif %} container" id="body-temperature">
             <div>
                 <form action="{% url 'fetch_submit_body_temperature' %}" method="post">
                 {{ body_temperature_form.as_p }}
@@ -107,7 +107,7 @@
                 </table>
             </div>
         </div>
-        <div class="switcher-content container" id="growth-data">
+        <div class="switcher-content{% if babycare_active == 'growth-data' %} active-content{% endif %} container" id="growth-data">
             <div>
                 <form action="{% url 'fetch_submit_growth_data' %}" method="post">
                 {{ growth_data_form.as_p }}

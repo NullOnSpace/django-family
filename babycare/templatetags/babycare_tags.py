@@ -14,6 +14,7 @@ def get_gestational_age_weeks(baby_date: BabyDate, ultrasound_fixed: bool = Fals
     :return: 孕周周数
     """
     days = baby_date.get_gestational_age_days(date=None, ultrasound_fixed=ultrasound_fixed)
+    days = days - 1
     return f"{days // 7}周{days % 7}天" if days >= 0 else f"尚未开始计算孕周"
 
 @register.filter

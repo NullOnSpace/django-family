@@ -21,7 +21,7 @@ def index(request: HttpRequest) -> HttpResponse:
     context['baby_date'] = BabyDate.objects.first()
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')
     context['task_form'] = TaskCalendarForm()
-    context['shopping_lists'] = ShoppingList.objects.all()
+    context['shopping_lists'] = ShoppingList.get_recent_lists()
     context['feedings'] = Feeding.objects.all().order_by('-date')
     context['feeding_form'] = FeedingForm()
     context['breast_bumps'] = BreastBumping.objects.all().order_by('-date')

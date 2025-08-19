@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/task_calendar/task_calendar.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/babycare/babycare.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shopping_list/shopping_list.css' %}">
 </head>
 
 <body>
@@ -43,7 +44,7 @@
                             <a class="nav-link {% if active == 'index' %}active{% endif %}" href="{% url 'dashboard:index' %}">首页</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if active == 'babycare' %}active{% endif %}" href="#">数据</a>
+                            <a class="nav-link {% if active == 'babycare' %}active{% endif %}" href="#">成长记录</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if active == 'list' %}active{% endif %}" href="#">清单</a>
@@ -120,7 +121,12 @@
                         <h3>清单</h3>
                         <ul id="shopping-lists">
                             {% for list in shopping_lists %}
-                            <li class="shopping-list"><a href="{% url 'shopping_list_detail' list.id %}">{{list.name}}</a></li>
+                            <li class="shopping-list"><a href="{% url 'shopping_list_detail' list.id %}">
+                                <div>
+                                    <div>{{list.name}}</div>
+                                    <div><small>共 {{ list.categories.count }} 品类 有 {{ list.get_item_count }} 单品</small></div>
+                                </div>
+                            </a></li>
                             {% empty %}
                             <li>清单为空</li>
                             {% endfor %}

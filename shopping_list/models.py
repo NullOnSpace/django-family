@@ -10,6 +10,16 @@ class ShoppingList(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_recent_lists(cls):
+        return ShoppingList.objects.prefetch_related("categories__items").order_by('-created_at')[:5]
+
+    def get_item_count(self):
+        return sum(
+            cate.items.count()
+            for cate in self.categories.all() # type: ignore
+        )
+
 
 class ItemCategory(models.Model):
     STATUS_CHOICES = [

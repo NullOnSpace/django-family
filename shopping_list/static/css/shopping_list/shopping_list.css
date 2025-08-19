@@ -2,3 +2,44 @@
     margin-top: 1rem;
     line-height: 2.5rem;
 }
+
+ul#shopping-lists {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li.shopping-list {
+    list-style: none;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    padding: 1rem;
+    padding-bottom: 2rem;
+    margin-top: -1rem;
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
+    font-weight: bold;
+    box-shadow: 3px 3px 3px rgba(var(--bs-body-color-rgb), .15)!important;
+}
+
+li.shopping-list > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+li.shopping-list:first-child {
+    margin-top: 1rem;
+}
+
+li.shopping-list:last-child {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+li.shopping-list:nth-child(even) {
+    background-color: var(--bs-info);
+}
+
+li.shopping-list small {
+    font-weight: normal;
+}

@@ -5,6 +5,8 @@ from django.conf import settings
 from django.utils import timezone
 
 # (fixme) 现在输入的是date 记录的是datetime 时间比较时都转化为了localdate比较
+
+
 class TaskCalendar(models.Model):
     FREQUENCY_CHOICES = [
         ('daily', 'Daily'),
@@ -49,9 +51,9 @@ class TaskCalendar(models.Model):
             return '已完成'
         elif self.is_outdated():
             return '已过期'
-        elif timezone.localtime(self.start_date).date() \
-            <= timezone.localdate() \
-                <= timezone.localtime(self.end_date).date():
+        elif (timezone.localtime(self.start_date).date()
+              <= timezone.localdate()
+              <= timezone.localtime(self.end_date).date()):
             return '进行中'
         else:
             return '未开始'

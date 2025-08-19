@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.utils import timezone
 
-
+# (fixme) 现在输入的是date 记录的是datetime 时间比较时都转化为了localdate比较
 class TaskCalendar(models.Model):
     FREQUENCY_CHOICES = [
         ('daily', 'Daily'),
@@ -42,24 +42,27 @@ class TaskCalendar(models.Model):
         return self.description
 
     def is_outdated(self):
-        return self.end_date < timezone.now()
-    
+        return timezone.localtime(self.end_date).date() < timezone.localdate()
+
     def get_status(self):
         if self.is_completed:
             return '已完成'
         elif self.is_outdated():
             return '已过期'
-        elif self.start_date <= timezone.now() <= self.end_date:
+        elif timezone.localtime(self.start_date).date() \
+            <= timezone.localdate() \
+                <= timezone.localtime(self.end_date).date():
             return '进行中'
         else:
             return '未开始'
-    
+
     def get_display_class(self):
-        if self.is_completed:
+        status = self.get_status()
+        if status == '已完成':
             return 'task-calendar-completed'
-        elif self.is_outdated():
+        elif status == '已过期':
             return 'task-calendar-outdated'
-        elif self.start_date <= timezone.now() <= self.end_date:
+        elif status == '进行中':
             return 'task-calendar-active'
         else:
             return 'task-calendar-coming'

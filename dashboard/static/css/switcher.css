@@ -1,9 +1,9 @@
 .switcher-buttons {
     /* display: inline-block; */
     border-radius: 5px;
-    padding: 2px 2px;
-    background-color: var(--bs-secondary-bg);
-    color: var(--bs-secondary-color);
+    padding: 4px 4px;
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
 }
 
 .switcher-buttons:hover {
@@ -11,13 +11,15 @@
 }
 
 .switcher-button.active-button {
-    background-color: var(--bs-primary-bg-subtle);
-    color: var(--bs-primary);
+    background-color: var(--bs-info);
+    color: var(--bs-info-text-emphasis);
     border-radius: 5px;
+    box-shadow: 0 3px 3px rgba(var(--bs-body-color-rgb),.3)!important;
+    font-weight: bold;
 }
 
 .switcher-button {
-    padding: 2px 10px;
+    padding: 6px 6px;
 }
 
 .switcher-content.active-content {

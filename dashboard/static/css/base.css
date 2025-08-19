@@ -13,11 +13,25 @@
 }
 
 section {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--bs-light);
+}
+
+section > div {
+    background-color: var(--bs-light-bg-subtle);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 4px 4px 8px rgba(var(--bs-body-color-rgb), 0.3);
+}
+
+section > h2, section > h3 {
+    margin-top: 0.5rem;
 }
 
 #main-container {
-    margin-top: 3.5rem;
+    margin-top: 4.5rem;
 }
 
 .unobvious-button {

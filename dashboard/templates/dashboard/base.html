@@ -8,8 +8,16 @@
     <title>{% block title %}{% endblock %}</title>
     {% block style_links %}
     {% endblock %}
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        @font-face {
+            font-display: block;
+            font-family: "bootstrap-icons";
+            src: url("{% static 'font/bootstrap-icons.woff2' %}") format("woff2"),
+            url("{% static 'font/bootstrap-icons.woff' %}") format("woff");
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'css/switcher.css' %}">
     <link rel="stylesheet" href="{% static 'css/task_calendar/task_calendar.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -77,36 +85,38 @@
             <div class="col-lg-4 col-md-12">
                 <aside>
                     {% block aside %}
-                    <section id="task-calendar" class="slight-margin">
+                    <section id="task-calendar">
                         <h3>近期计划</h3>
-                        <div><button type="button" id="create-task-calendar" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-task-calendar-modal">+ 添加计划</button></div>
-                        {% if task_calendars %}
-                            {% include "task_calendar/includes/task_list_simple.html" %}
-                        {% else %}
-                            <div class="lead">暂无计划</div>
-                        {% endif %}
-                        <div class="modal fade" tabindex="-1" id="create-task-calendar-modal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">新增计划</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="{% url 'create_task' %}" method="post">
-                                        {{ task_form.as_p }}
-                                        {% csrf_token %}
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                    <button id="task-calendar-create-submit" type="button" class="btn btn-primary">确认</button>
-                                </div>
+                        <div>
+                            <div><button type="button" id="create-task-calendar" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-task-calendar-modal">+ 添加计划</button></div>
+                            {% if task_calendars %}
+                                {% include "task_calendar/includes/task_list_simple.html" %}
+                            {% else %}
+                                <div class="lead">暂无计划</div>
+                            {% endif %}
+                            <div class="modal fade" tabindex="-1" id="create-task-calendar-modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">新增计划</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{% url 'create_task' %}" method="post">
+                                            {{ task_form.as_p }}
+                                            {% csrf_token %}
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        <button id="task-calendar-create-submit" type="button" class="btn btn-primary">确认</button>
+                                    </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    <section id="shopping-list" class="slight-margin">
+                    <section id="shopping-list">
                         <h3>清单</h3>
                         <ul id="shopping-lists">
                             {% for list in shopping_lists %}
@@ -121,7 +131,7 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/base.js' %}"></script>
     <script src="{% static 'js/switcher.js' %}"></script>
     <script src="{% static 'js/task_calendar/task_calendar.js' %}"></script>

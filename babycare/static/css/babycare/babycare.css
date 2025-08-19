@@ -1,7 +1,12 @@
-#baby-ga,
+/* #baby-ga,
 #baby-age {
     display: inline-block;
     background-color: var(--bs-tertiary-bg);
+} */
+
+#baby-age,
+#baby-record-contents {
+    margin-top: 0.5rem;
 }
 
 #baby-ga-buttons,
@@ -9,14 +14,14 @@
     display: inline-block;
     /* margin-left: 10px; */
 }
-
+/* 
 #baby-date-wrapper {
     margin-top: 0.5rem;
 }
 
 #baby-date {
     margin-top: 0.5rem;
-}
+} */
 
 #baby-record-wrapper form {
     padding: 1rem;

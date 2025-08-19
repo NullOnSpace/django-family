@@ -1,11 +1,11 @@
-#task-calendar {
+/* #task-calendar {
     margin-top: 20px;
     padding: 5px;
-    /* max-width: 300px; */
-}
+    max-width: 300px;
+} */
 
 ul#task-calendar-list {
-    margin-top: 20px;
+    margin: .5rem 0;
     list-style-type: none;
     padding: 0;
     max-height: 400px;

@@ -1,29 +1,13 @@
-.left-side-mark {
-    margin-top: 1rem;
-    border-left: 1rem solid var(--bs-primary);
-    padding-left: 1rem;
-}
-
-.slight-padding {
-    padding: 0.5rem 0;
-}
-
-.slight-margin {
-    margin-top: 0.5rem;
-}
-
-section {
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+body {
     background-color: var(--bs-light);
 }
 
-section > div {
+section {
     background-color: var(--bs-light-bg-subtle);
     padding: 0.5rem;
     border-radius: 0.5rem;
-    box-shadow: 4px 4px 8px rgba(var(--bs-body-color-rgb), 0.3);
+    box-shadow: 4px 4px 8px rgba(var(--bs-body-color-rgb), 0.15);
+    margin-bottom: 1rem;
 }
 
 section > h2, section > h3 {
@@ -47,4 +31,10 @@ section > h2, section > h3 {
     border-style: none;
     border-color: transparent;
     border-image: initial;
+}
+
+.left-side-mark {
+    margin-top: 1rem;
+    border-left: 1rem solid var(--bs-primary);
+    padding-left: 1rem;
 }

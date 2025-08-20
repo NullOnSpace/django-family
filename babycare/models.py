@@ -158,6 +158,15 @@ class Feeding(models.Model):
 
     def __str__(self):
         return f"Feeding on {self.date} - {self.amount}ml"
+    
+    @classmethod
+    def get_recent_feedings(cls, limit=9):
+        """
+        获取最近的喂养记录
+        :param limit: 返回的记录数量，默认为9
+        :return: 最近的喂养记录列表
+        """
+        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
 
 
 class BreastBumping(models.Model):

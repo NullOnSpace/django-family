@@ -22,7 +22,7 @@ def index(request: HttpRequest) -> HttpResponse:
     context['task_calendars'] = TaskCalendar.objects.all().order_by('-start_date')
     context['task_form'] = TaskCalendarForm()
     context['shopping_lists'] = ShoppingList.get_recent_lists()
-    context['feedings'] = Feeding.objects.all().order_by('-date')
+    context['feedings'] = Feeding.get_recent_feedings()
     context['feeding_form'] = FeedingForm()
     context['breast_bumps'] = BreastBumping.objects.all().order_by('-date')
     context['breast_bumping_form'] = BreastBumpingForm()

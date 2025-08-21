@@ -1,0 +1,24 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>记录时间</th>
+            <th>体重 (kg)</th>
+            <th>身高 (cm)</th>
+            <th>头围 (cm)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for growth in growth_data %}
+            <tr>
+                <td>{{ growth.date|date:"Y-m-d" }}{% if growth.notes %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ growth.notes }}"></i>{% endif %}</td>
+                <td>{{ growth.weight|default:"-" }}</td>
+                <td>{{ growth.height|default:"-" }}</td>
+                <td>{{ growth.head_circumference|default:"-" }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">暂无生长数据记录</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

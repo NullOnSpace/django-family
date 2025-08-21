@@ -1,0 +1,20 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>喂奶时间</th>
+            <th>喂奶量</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for feeding in feedings %}
+        <tr>
+            <td>{{ feeding.date|date:"Y-m-d H:i" }}</td>
+            <td>{{ feeding.amount }} ml {% if feeding.note %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ feeding.note }}"></i>{% endif %}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">暂无喂奶记录</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

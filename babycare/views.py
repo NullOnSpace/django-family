@@ -102,7 +102,7 @@ class FeedingListView(ListView):
     model = models.Feeding
     template_name = 'babycare/feedings_list.html'
     context_object_name = 'feedings'
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return models.Feeding.objects.filter(baby_date__isnull=False).order_by('-date')
@@ -124,6 +124,24 @@ class BodyTemperatureListView(ListView):
 
     def get_queryset(self):
         return models.BodyTemperature.objects.filter(baby_date__isnull=False).order_by('-date')
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'babycare'
+        return context
+    
+
+class GrowthDataListView(ListView):
+    """
+    View to list all growth data.
+    """
+    model = models.GrowthData
+    template_name = 'babycare/growth_datas_list.html'
+    context_object_name = 'growth_data'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.GrowthData.objects.filter(baby_date__isnull=False).order_by('-date')
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

@@ -24,11 +24,11 @@ def index(request: HttpRequest) -> HttpResponse:
     context['shopping_lists'] = ShoppingList.get_recent_lists()
     context['feedings'] = Feeding.get_recent_feedings()
     context['feeding_form'] = FeedingForm()
-    context['breast_bumps'] = BreastBumping.objects.all().order_by('-date')
-    context['breast_bumping_form'] = BreastBumpingForm()
-    context['body_temperatures'] = BodyTemperature.objects.all().order_by('-date')
+    # context['breast_bumps'] = BreastBumping.objects.all().order_by('-date')
+    # context['breast_bumping_form'] = BreastBumpingForm()
+    context['body_temperatures'] = BodyTemperature.get_recent_body_temperatures()
     context['body_temperature_form'] = BodyTemperatureForm()
-    context['growth_data'] = GrowthData.objects.all().order_by('-date')
+    context['growth_data'] = GrowthData.get_recent_growth_data()
     context['growth_data_form'] = GrowthDataForm()
     context['active'] = 'index'  # Set the active tab for the navigation bar
     if request.GET.get('babycare_active'):

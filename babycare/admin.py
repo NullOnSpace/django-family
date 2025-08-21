@@ -11,4 +11,4 @@ admin.site.register(BodyTemperature)
 
 @admin.register(GrowthData)
 class GrowthDataAdmin(admin.ModelAdmin):
-    fields = ('baby_date', 'date', 'weight', 'height', 'head_circumference')
+    fields = ('baby_date', 'date', 'weight', 'height', 'head_circumference', 'notes')

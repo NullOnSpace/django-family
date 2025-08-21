@@ -232,6 +232,15 @@ class BodyTemperature(models.Model):
         max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')  # 测量方式
     notes = models.TextField(blank=True, null=True)  # 备注
 
+    @classmethod
+    def get_recent_body_temperatures(cls, limit=7):
+        """
+        获取最近的体温记录
+        :param limit: 返回的记录数量，默认为7
+        :return: 最近的体温记录列表
+        """
+        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
+
     def __str__(self):
         return f"Body Temperature on {self.date} - {self.temperature}°C"
 
@@ -244,6 +253,15 @@ class GrowthData(models.Model):
     height = models.FloatField(blank=True, null=True)  # 身高，单位为厘米
     head_circumference = models.FloatField(blank=True, null=True)  # 头围，单位为厘米
     notes = models.TextField(blank=True, null=True)  # 备注
+
+    @classmethod
+    def get_recent_growth_data(cls, limit=10):
+        """
+        获取最近的生长数据记录
+        :param limit: 返回的记录数量，默认为10
+        :return: 最近的生长数据记录列表
+        """
+        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
 
     def __str__(self):
         return f"Growth Data on {self.date} - Weight: {self.weight}kg, Height: {self.height}cm, Head Circumference: {self.head_circumference}cm"

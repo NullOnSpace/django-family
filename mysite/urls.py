@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+
 urlpatterns = [
     path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='home'),
     path('0725accounts/', include('iuser.urls')),
@@ -26,4 +28,4 @@ urlpatterns = [
     path('shopping_list/', include('shopping_list.urls')),
     path('task_calendar/', include('task_calendar.urls')),
     path('babycare/', include('babycare.urls')),
-]
+] + debug_toolbar_urls()

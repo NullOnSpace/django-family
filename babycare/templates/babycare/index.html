@@ -1,0 +1,9 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}主页{% endblock %}
+
+{% block main %}
+<section>
+    <a href="{% url 'babycare:feedings_list' %}">喂养记录</a>
+</section>
+{% endblock %}

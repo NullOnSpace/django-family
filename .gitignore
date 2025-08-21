@@ -3,6 +3,7 @@
 /media/*
 /static/*
 /logs/*
+/output/*
 
 
 # Byte-compiled / optimized / DLL files

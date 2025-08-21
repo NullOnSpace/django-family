@@ -8,7 +8,7 @@
     <div class="switcher-contents" id="baby-record-contents">
         <div class="switcher-content{% if babycare_active == 'baby-feeding' %} active-content{% endif %} container" id="baby-feeding">
             <div>
-                <form action="{% url 'fetch_submit_feeding' %}" method="post">
+                <form action="{% url 'babycare:fetch_submit_feeding' %}" method="post">
                 {{ feeding_form.as_p }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 
@@ -41,7 +41,7 @@
         </div>
         <div class="switcher-content{% if babycare_active == 'breast-bumping' %} active-content{% endif %} container" id="breast-bumping">
             <div>
-                <form action="{% url 'fetch_submit_breast_bumping' %}" method="post">
+                <form action="{% url 'babycare:fetch_submit_breast_bumping' %}" method="post">
                 {{ breast_bumping_form.as_p }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 
@@ -74,7 +74,7 @@
         </div>
         <div class="switcher-content{% if babycare_active == 'body-temperature' %} active-content{% endif %} container" id="body-temperature">
             <div>
-                <form action="{% url 'fetch_submit_body_temperature' %}" method="post">
+                <form action="{% url 'babycare:fetch_submit_body_temperature' %}" method="post">
                 {{ body_temperature_form.as_p }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 
@@ -109,7 +109,7 @@
         </div>
         <div class="switcher-content{% if babycare_active == 'growth-data' %} active-content{% endif %} container" id="growth-data">
             <div>
-                <form action="{% url 'fetch_submit_growth_data' %}" method="post">
+                <form action="{% url 'babycare:fetch_submit_growth_data' %}" method="post">
                 {{ growth_data_form.as_p }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 

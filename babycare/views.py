@@ -1,9 +1,11 @@
+from typing import Any
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.views.generic.list import ListView
 
-from babycare.models import BabyDate
+from babycare import models
 from babycare.modelforms import (
     FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm)
 
@@ -18,7 +20,7 @@ def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:
     if form.is_valid():
         feeding = form.save(commit=False)
         # (fixme) babydate应该是和提交用户相关
-        feeding.baby_date = BabyDate.objects.first()
+        feeding.baby_date = models.BabyDate.objects.first()
         feeding.save()
     else:
         print(form.errors)
@@ -36,7 +38,7 @@ def fetch_submit_breast_bumping(request: HttpRequest) -> HttpResponse:
     if form.is_valid():
         breast_bumping = form.save(commit=False)
         # (fixme) babydate应该是和提交用户相关
-        breast_bumping.baby_date = BabyDate.objects.first()
+        breast_bumping.baby_date = models.BabyDate.objects.first()
         breast_bumping.save()
     else:
         print(form.errors)
@@ -54,7 +56,7 @@ def fetch_submit_body_temperature(request: HttpRequest) -> HttpResponse:
     if form.is_valid():
         body_temperature = form.save(commit=False)
         # (fixme) babydate应该是和提交用户相关
-        body_temperature.baby_date = BabyDate.objects.first()
+        body_temperature.baby_date = models.BabyDate.objects.first()
         body_temperature.save()
     else:
         print(form.errors)
@@ -72,10 +74,40 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     if form.is_valid():
         growth_data = form.save(commit=False)
         # (fixme) babydate应该是和提交用户相关
-        growth_data.baby_date = BabyDate.objects.first()
+        growth_data.baby_date = models.BabyDate.objects.first()
         growth_data.save()
     else:
         print(form.errors)
     url = reverse('dashboard:index')
     url += f'?babycare_active=growth-data'
     return HttpResponseRedirect(url)
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    """
+    Render the index page of the baby care dashboard.
+    """
+    if request.user.is_anonymous:
+        return render(request, 'dashboard/public_index.html')
+    
+    context = {
+        'active': 'babycare',
+    }
+    return render(request, 'babycare/index.html', context)
+
+class FeedingListView(ListView):
+    """
+    View to list all feedings.
+    """
+    model = models.Feeding
+    template_name = 'babycare/feedings_list.html'
+    context_object_name = 'feedings'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return models.Feeding.objects.filter(baby_date__isnull=False).order_by('-date')
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'babycare'
+        return context

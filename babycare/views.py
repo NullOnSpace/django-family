@@ -111,3 +111,21 @@ class FeedingListView(ListView):
         context = super().get_context_data(**kwargs)
         context['active'] = 'babycare'
         return context
+
+
+class BodyTemperatureListView(ListView):
+    """
+    View to list all body temperatures.
+    """
+    model = models.BodyTemperature
+    template_name = 'babycare/body_temperatures_list.html'
+    context_object_name = 'body_temperatures'
+    paginate_by = 8
+
+    def get_queryset(self):
+        return models.BodyTemperature.objects.filter(baby_date__isnull=False).order_by('-date')
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'babycare'
+        return context

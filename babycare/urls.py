@@ -16,4 +16,6 @@ urlpatterns = [
 
     path('', views.index, name='index'),
     path('feedings/', views.FeedingListView.as_view(), name='feedings_list'),
+     path('body_temperatures/', views.BodyTemperatureListView.as_view(),
+           name='body_temperatures_list'),
 ]

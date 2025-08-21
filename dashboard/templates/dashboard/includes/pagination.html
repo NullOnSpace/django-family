@@ -24,6 +24,7 @@
             <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
         </li>
             {% if page_obj.paginator.num_pages != page_obj.next_page_number|add:"1" %}
+            {# 不论是倒数第二页还是倒数第三页都不应该显示省略符号 #}
             <li class="page-item disabled">
                 <a class="page-link" href="#">...</a>
             </li>

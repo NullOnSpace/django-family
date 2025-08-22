@@ -1,4 +1,8 @@
 from typing import Any
+import zoneinfo
+from datetime import timedelta, datetime, time
+
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -89,9 +93,19 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     if request.user.is_anonymous:
         return render(request, 'dashboard/public_index.html')
-    
+    tz = zoneinfo.ZoneInfo('Asia/Shanghai')
+    yesterday = timezone.now().astimezone(tz).date() - timedelta(days=1)
+    yesterday_start = datetime.combine(yesterday, time.min, tzinfo=tz)
+    yesterday_end = datetime.combine(yesterday, time.max, tzinfo=tz)
+    last_feeding = models.Feeding.objects.filter(date__range=(yesterday_start, yesterday_end))
+    last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
+    last_body_temperature = models.BodyTemperature.objects.latest("date")
+    last_growth_data = models.GrowthData.objects.latest("date")
     context = {
         'active': 'babycare',
+        'last_feeding_amount': last_feeding_amount,
+        "last_body_temperature": last_body_temperature,
+        "last_growth_data": last_growth_data,
     }
     return render(request, 'babycare/index.html', context)
 

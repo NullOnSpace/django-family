@@ -152,7 +152,7 @@ class BabyDate(models.Model):
 class Feeding(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='feedings')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     amount = models.FloatField()  # 喂养量，单位为毫升
     note = models.TextField(blank=True, null=True)  # 备注
 
@@ -172,7 +172,7 @@ class Feeding(models.Model):
 class BreastBumping(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='breast_bumpings')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     amount = models.FloatField()  # 挤奶量，单位为毫升
     notes = models.TextField(blank=True, null=True)  # 备注
 
@@ -204,7 +204,7 @@ class Pooh(models.Model):
 
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='poohs')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     amount = models.CharField(
         max_length=12, choices=POOH_AMOUNT_CHOICES)  # 大便量
     color = models.CharField(
@@ -226,7 +226,7 @@ class BodyTemperature(models.Model):
     ]
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='body_temperatures')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     temperature = models.FloatField()  # 体温，单位为摄氏度
     measurement = models.CharField(
         max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')  # 测量方式

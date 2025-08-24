@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from utils.datetime import get_range_of_date, get_local_date
 
 class EarlierThanLMPError(Exception):
     """Exception raised when the date is earlier than the last menstrual period."""
@@ -33,7 +34,7 @@ class BabyDate(models.Model):
         :return: 距离末次月经的天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         if self.last_menstrual_period > date:
             raise EarlierThanLMPError(
                 f"The date: {date} is earlier than the last menstrual period{self.last_menstrual_period}.")
@@ -50,7 +51,7 @@ class BabyDate(models.Model):
         :return: 孕周天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         days = self.days_to_lmp(date)
         if ultrasound_fixed:
             days -= self.ultrasound_fixed_days
@@ -64,7 +65,7 @@ class BabyDate(models.Model):
         :return: 月经后年龄天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         if self.birthday is None or date < self.birthday.date():
             raise NotBornError(
                 f"The date for PMA: {date} is earlier than the birthday: {self.birthday}.")
@@ -78,7 +79,7 @@ class BabyDate(models.Model):
         :return: 实际年龄天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         if not self.is_born(date):
             raise NotBornError(
                 f"The date for chronological age: {date} is earlier than the birthday: {self.birthday}.")
@@ -95,7 +96,7 @@ class BabyDate(models.Model):
         :return: 矫正年龄天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         if self.is_born(date):
             if self.is_preterm():
                 return -self.days_to_due(date) + 1
@@ -115,7 +116,7 @@ class BabyDate(models.Model):
         :return: 距离预产期的天数
         """
         if date is None:
-            date = timezone.now().date()
+            date = get_local_date(timezone.now())
         if self.last_menstrual_period > date:
             raise EarlierThanLMPError(
                 f"The date: {date} is earlier than the last menstrual period: {self.last_menstrual_period}.")
@@ -138,15 +139,15 @@ class BabyDate(models.Model):
         :return: 如果已经出生，返回True，否则返回False
         """
         if date is None:
-            date = timezone.now().date()
-        return self.birthday is not None and self.birthday.date() < date
+            date = get_local_date(timezone.now())
+        return self.birthday is not None and get_local_date(self.birthday) < date
 
     def is_preterm(self) -> bool:
         """
         判断是否为早产
         :return: 如果是早产，返回True，否则返回False
         """
-        return self.is_born() and self.get_gestational_age_days(self.birthday.date()) < 259  # type: ignore
+        return self.is_born() and self.get_gestational_age_days(get_local_date(self.birthday)) < 259  # type: ignore
 
 
 class Feeding(models.Model):

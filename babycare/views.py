@@ -12,6 +12,7 @@ from django.views.generic.list import ListView
 from babycare import models
 from babycare.modelforms import (
     FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm)
+from iuser.decorators import login_or_404
 
 
 # Create your views here.
@@ -86,13 +87,11 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     url += f'?babycare_active=growth-data'
     return HttpResponseRedirect(url)
 
-
+@login_or_404
 def index(request: HttpRequest) -> HttpResponse:
     """
     Render the index page of the baby care dashboard.
     """
-    if request.user.is_anonymous:
-        return render(request, 'dashboard/public_index.html')
     tz = zoneinfo.ZoneInfo('Asia/Shanghai')
     yesterday = timezone.now().astimezone(tz).date() - timedelta(days=1)
     yesterday_start = datetime.combine(yesterday, time.min, tzinfo=tz)

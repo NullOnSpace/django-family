@@ -66,7 +66,7 @@ class BabyDate(models.Model):
         """
         if date is None:
             date = get_local_date(timezone.now())
-        if self.birthday is None or date < self.birthday.date():
+        if self.birthday is None or date < get_local_date(self.birthday):
             raise NotBornError(
                 f"The date for PMA: {date} is earlier than the birthday: {self.birthday}.")
         return (date - self.last_menstrual_period).days + 1
@@ -84,7 +84,7 @@ class BabyDate(models.Model):
             raise NotBornError(
                 f"The date for chronological age: {date} is earlier than the birthday: {self.birthday}.")
         else:
-            return (date - self.birthday.date()).days + 1  # type: ignore
+            return (date - get_local_date(self.birthday)).days + 1  # type: ignore
 
     def get_corrected_age_days(self, date: datetime.date | None = None) -> int:
         """

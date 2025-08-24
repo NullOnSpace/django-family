@@ -7,13 +7,13 @@
     <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' %}">
     <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
         <div class="text-start fs-6">前一天喂奶量:</div>
-        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feeding_amount }}mL</div>
+        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feeding_amount|floatformat:"0" }}mL</div>
     </div>
     </a>
     <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:body_temperatures_list' %}">
     <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
         <div class="text-start fs-6">上一次体温:</div>
-        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature }}°C</div>
+        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature|floatformat:"1" }}°C</div>
     </div>
     </a>
 <!-- 

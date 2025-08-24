@@ -13,9 +13,30 @@ from babycare import models
 from babycare.modelforms import (
     FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm)
 from iuser.decorators import login_or_404
+from utils.datetime import get_local_date, get_range_of_date
 
 
 # Create your views here.
+@login_or_404
+def index(request: HttpRequest) -> HttpResponse:
+    """
+    Render the index page of the baby care dashboard.
+    """
+    yesterday = get_local_date(timezone.now()) - timedelta(days=1)
+    yesterday_range = get_range_of_date(yesterday)
+    last_feeding = models.Feeding.objects.filter(date__range=yesterday_range)
+    last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
+    last_body_temperature = models.BodyTemperature.objects.latest("date")
+    last_growth_data = models.GrowthData.objects.latest("date")
+    context = {
+        'active': 'babycare',
+        'last_feeding_amount': last_feeding_amount,
+        "last_body_temperature": last_body_temperature,
+        "last_growth_data": last_growth_data,
+    }
+    return render(request, 'babycare/index.html', context)
+
+
 @require_POST
 def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:
     """
@@ -86,27 +107,6 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     url = reverse('dashboard:index')
     url += f'?babycare_active=growth-data'
     return HttpResponseRedirect(url)
-
-@login_or_404
-def index(request: HttpRequest) -> HttpResponse:
-    """
-    Render the index page of the baby care dashboard.
-    """
-    tz = zoneinfo.ZoneInfo('Asia/Shanghai')
-    yesterday = timezone.now().astimezone(tz).date() - timedelta(days=1)
-    yesterday_start = datetime.combine(yesterday, time.min, tzinfo=tz)
-    yesterday_end = datetime.combine(yesterday, time.max, tzinfo=tz)
-    last_feeding = models.Feeding.objects.filter(date__range=(yesterday_start, yesterday_end))
-    last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
-    last_body_temperature = models.BodyTemperature.objects.latest("date")
-    last_growth_data = models.GrowthData.objects.latest("date")
-    context = {
-        'active': 'babycare',
-        'last_feeding_amount': last_feeding_amount,
-        "last_body_temperature": last_body_temperature,
-        "last_growth_data": last_growth_data,
-    }
-    return render(request, 'babycare/index.html', context)
 
 class FeedingListView(ListView):
     """

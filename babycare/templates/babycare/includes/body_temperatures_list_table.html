@@ -9,7 +9,7 @@
     <tbody>
     {% for body_temp in body_temperatures %}
         <tr>
-            <td>{{ body_temp.date|date:"Y-m-d H:i" }}</td>
+            <td>{{ body_temp.measure_at|date:"Y-m-d H:i" }}</td>
             <td>{{ body_temp.temperature }}{% if body_temp.notes %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ body_temp.notes }}"></i>{% endif %}</td>
             <td>{{ body_temp.get_measurement_display }}</td>
         </tr>

@@ -8,7 +8,7 @@
     <tbody>
     {% for feeding in feedings %}
         <tr>
-            <td>{{ feeding.date|date:"Y-m-d H:i" }}</td>
+            <td>{{ feeding.feed_at|date:"Y-m-d H:i" }}</td>
             <td>{{ feeding.amount }} ml {% if feeding.note %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ feeding.note }}"></i>{% endif %}</td>
         </tr>
     {% empty %}

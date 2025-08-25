@@ -4,7 +4,19 @@
 <section>
     <h2>喂奶量</h2>
     {% include 'babycare/includes/feedings_list_table.html' %}
-    {% include 'dashboard/includes/pagination.html' %}
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="?date={{ previous_day|date:'Y-m-d' }}">{{ previous_day|date:'Y-m-d' }}</a>
+        </li>
+        <li class="page-item active">
+            <a href="#?date={{ feed_date|date:'Y-m-d' }}" class="page-link">{{ feed_date|date:'Y-m-d' }}</a>
+        </li>
+        {% if next_day %}
+        <li class="page-item">
+            <a class="page-link" href="?date={{ next_day|date:'Y-m-d' }}">{{ next_day|date:'Y-m-d' }}</a>
+        </li>
+        {% endif %}
+    </ul>
 </section>
 {% endblock %}
 

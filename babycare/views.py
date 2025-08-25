@@ -1,8 +1,8 @@
-from typing import Any
+from typing import Any, Dict
 import zoneinfo
 from datetime import timedelta, datetime, time
 
-from django.utils import timezone
+from django.utils import timezone, dateparse
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -24,9 +24,10 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     yesterday = get_local_date(timezone.now()) - timedelta(days=1)
     yesterday_range = get_range_of_date(yesterday)
-    last_feeding = models.Feeding.objects.filter(date__range=yesterday_range)
+    last_feeding = models.Feeding.objects.filter(
+        feed_at__range=yesterday_range)
     last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
-    last_body_temperature = models.BodyTemperature.objects.latest("date")
+    last_body_temperature = models.BodyTemperature.objects.latest("measure_at")
     last_growth_data = models.GrowthData.objects.latest("date")
     context = {
         'active': 'babycare',
@@ -108,22 +109,21 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     url += f'?babycare_active=growth-data'
     return HttpResponseRedirect(url)
 
-class FeedingListView(ListView):
-    """
-    View to list all feedings.
-    """
-    model = models.Feeding
-    template_name = 'babycare/feedings_list.html'
-    context_object_name = 'feedings'
-    paginate_by = 10
 
-    def get_queryset(self):
-        return models.Feeding.objects.filter(baby_date__isnull=False).order_by('-date')
-    
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['active'] = 'babycare'
-        return context
+@login_or_404
+def feeding_list(request: HttpRequest):
+    feed_date_str = request.GET.get('date', '')
+    feed_date = dateparse.parse_date(feed_date_str)
+    if feed_date is None:
+        feed_date = timezone.localdate()
+    context: Dict[str, Any] = {'feed_date': feed_date}
+    context['previous_day'] = feed_date - timedelta(1)
+    if feed_date < timezone.localdate():
+        context['next_day'] = feed_date + timedelta(1)
+    context['feedings'] = models.Feeding.objects.filter(baby_date__isnull=False).filter(
+        feed_at__range=get_range_of_date(feed_date)).order_by('-feed_at')
+    context['active'] = 'babycare'
+    return render(request, 'babycare/feedings_list.html', context)
 
 
 class BodyTemperatureListView(ListView):
@@ -136,13 +136,13 @@ class BodyTemperatureListView(ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        return models.BodyTemperature.objects.filter(baby_date__isnull=False).order_by('-date')
-    
+        return models.BodyTemperature.objects.filter(baby_date__isnull=False).order_by('-measure_at')
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['active'] = 'babycare'
         return context
-    
+
 
 class GrowthDataListView(ListView):
     """
@@ -155,7 +155,7 @@ class GrowthDataListView(ListView):
 
     def get_queryset(self):
         return models.GrowthData.objects.filter(baby_date__isnull=False).order_by('-date')
-    
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['active'] = 'babycare'

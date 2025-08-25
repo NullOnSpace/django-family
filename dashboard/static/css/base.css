@@ -38,3 +38,7 @@ section > h2, section > h3 {
     border-left: 1rem solid var(--bs-primary);
     padding-left: 1rem;
 }
+
+.page-item form input{
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+}

@@ -8,6 +8,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
+from django.db.models import Sum
 
 from babycare import models
 from babycare.modelforms import (
@@ -120,8 +121,10 @@ def feeding_list(request: HttpRequest):
     context['previous_day'] = feed_date - timedelta(1)
     if feed_date < timezone.localdate():
         context['next_day'] = feed_date + timedelta(1)
-    context['feedings'] = models.Feeding.objects.filter(baby_date__isnull=False).filter(
+    context['feedings'] = feedings = models.Feeding.objects.filter(baby_date__isnull=False).filter(
         feed_at__range=get_range_of_date(feed_date)).order_by('-feed_at')
+    if feedings:
+        context['feedings_total'] = feedings.aggregate(Sum('amount'))
     context['active'] = 'babycare'
     return render(request, 'babycare/feedings_list.html', context)
 

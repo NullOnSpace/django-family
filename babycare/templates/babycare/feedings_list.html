@@ -4,6 +4,9 @@
 <section>
     <h2>喂奶量</h2>
     {% include 'babycare/includes/feedings_list_table.html' %}
+    {% if feedings_total %}
+    <div class="p-1 my-2">当日喂奶总量 {{ feedings_total.amount__sum }} ml</div>
+    {% endif %}
     <ul class="pagination">
         <li class="page-item">
             <a class="page-link" href="?date={{ previous_day|date:'Y-m-d' }}">{{ previous_day|date:'m-d' }}</a>

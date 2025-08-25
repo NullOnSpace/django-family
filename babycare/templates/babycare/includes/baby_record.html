@@ -17,6 +17,7 @@
             <div>
                 {% include 'babycare/includes/feedings_list_table.html' %}
             </div>
+            <div class="p-1"><a href="{% url 'babycare:feedings_list' %}">查看所有</a></div>
         </div>
         <!-- <div class="switcher-content{% if babycare_active == 'breast-bumping' %} active-content{% endif %} container" id="breast-bumping">
             <div>
@@ -62,6 +63,7 @@
             <div>
                 {% include 'babycare/includes/body_temperatures_list_table.html' %}
             </div>
+            <div class="p-1"><a href="{% url 'babycare:body_temperatures_list' %}">查看所有</a></div>
         </div>
         <div class="switcher-content{% if babycare_active == 'growth-data' %} active-content{% endif %} container" id="growth-data">
             <div>
@@ -74,6 +76,7 @@
             <div>
                 {% include 'babycare/includes/growth_datas_list_table.html' %}
             </div>
+            <div class="p-1"><a href="{% url 'babycare:growth_datas_list' %}">查看所有</a></div>
         </div>
     </div>
 </div>

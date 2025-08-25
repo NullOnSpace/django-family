@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-from utils.datetime import get_range_of_date, get_local_date
+from utils.datetime import get_local_date
 
 class EarlierThanLMPError(Exception):
     """Exception raised when the date is earlier than the last menstrual period."""

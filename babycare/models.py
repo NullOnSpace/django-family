@@ -153,12 +153,12 @@ class BabyDate(models.Model):
 class Feeding(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='feedings')
-    date = models.DateTimeField(default=timezone.now)
+    feed_at = models.DateTimeField(default=timezone.now)
     amount = models.FloatField()  # 喂养量，单位为毫升
     note = models.TextField(blank=True, null=True)  # 备注
 
     def __str__(self):
-        return f"Feeding on {self.date} - {self.amount}ml"
+        return f"Feeding on {self.feed_at} - {self.amount}ml"
     
     @classmethod
     def get_recent_feedings(cls, limit=9):
@@ -167,7 +167,7 @@ class Feeding(models.Model):
         :param limit: 返回的记录数量，默认为9
         :return: 最近的喂养记录列表
         """
-        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
+        return cls.objects.filter(baby_date__isnull=False).order_by('-feed_at')[:limit]
 
 
 class BreastBumping(models.Model):
@@ -227,7 +227,7 @@ class BodyTemperature(models.Model):
     ]
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='body_temperatures')
-    date = models.DateTimeField(default=timezone.now)
+    measure_at = models.DateTimeField(default=timezone.now)
     temperature = models.FloatField()  # 体温，单位为摄氏度
     measurement = models.CharField(
         max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')  # 测量方式
@@ -240,10 +240,10 @@ class BodyTemperature(models.Model):
         :param limit: 返回的记录数量，默认为7
         :return: 最近的体温记录列表
         """
-        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
+        return cls.objects.filter(baby_date__isnull=False).order_by('-measure_at')[:limit]
 
     def __str__(self):
-        return f"Body Temperature on {self.date} - {self.temperature}°C"
+        return f"Body Temperature on {self.measure_at} - {self.temperature}°C"
 
 
 class GrowthData(models.Model):

@@ -22,6 +22,7 @@ class NotBornError(Exception):
 
 class BabyDate(models.Model):
     last_menstrual_period = models.DateField()  # 末次月经
+    nickname = models.CharField(max_length=20, null=True, unique=True)
     estimated_due_date = models.DateField(null=True, blank=True)  # 推测预产期
     birthday = models.DateTimeField(null=True, blank=True)  # 出生时间
     ultrasound_fixed_days = models.IntegerField(
@@ -148,6 +149,9 @@ class BabyDate(models.Model):
         :return: 如果是早产，返回True，否则返回False
         """
         return self.is_born() and self.get_gestational_age_days(get_local_date(self.birthday)) < 259  # type: ignore
+    
+    def __str__(self):
+        return self.nickname
 
 
 class Feeding(models.Model):

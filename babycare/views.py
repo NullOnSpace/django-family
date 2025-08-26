@@ -4,7 +4,7 @@ from datetime import timedelta, datetime, time
 
 from django.utils import timezone, dateparse
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
@@ -12,7 +12,7 @@ from django.db.models import Sum
 
 from babycare import models
 from babycare.modelforms import (
-    FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm)
+    FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm)
 from iuser.decorators import login_or_404
 from utils.datetime import get_local_date, get_range_of_date
 
@@ -38,6 +38,31 @@ def index(request: HttpRequest) -> HttpResponse:
     }
     return render(request, 'babycare/index.html', context)
 
+@login_or_404
+def create_baby_date(request: HttpRequest) -> HttpResponse:
+    """
+    Render the baby date creation page.
+    """
+    context = dict()
+    context['active'] = 'babycare'
+    if request.method == 'GET':
+        context['form'] = BabyDateForm()
+        return render(request, 'babycare/baby_date_create.html', context)
+    elif request.method == 'POST':
+        form = BabyDateForm(request.POST)
+        if form.is_valid():
+            babydate = form.save()
+            models.BabyRelation.objects.create(
+                baby_date=babydate,
+                request_by=request.user,
+                approve_by=request.user,
+                approve_at=timezone.now(),
+                status=models.BabyRelation.REQUEST_STATUS[2][0],
+            )
+            return redirect('dashboard:index')
+        else:
+            print(form.errors)
+    raise Http404()
 
 @require_POST
 def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:

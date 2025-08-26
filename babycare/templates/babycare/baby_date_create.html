@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}创建宝宝信息{% endblock %}
+
+{% block main %}
+<form action="" method="POST">
+    {{form.as_p}}
+    {% csrf_token %}
+    <button class="btn btn-primary">创建宝宝信息</button>
+</form>
+{% endblock %}
+
+{% block aside %}
+{% endblock %}

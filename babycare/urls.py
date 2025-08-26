@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('', views.index, name='index'),
     path('feedings/', views.feeding_list, name='feedings_list'),
+    path('create/', views.create_baby_date, name='create_baby_date'),
     path('body_temperatures/', views.BodyTemperatureListView.as_view(),
            name='body_temperatures_list'),
     path('growth_datas/', views.GrowthDataListView.as_view(), name='growth_datas_list'),

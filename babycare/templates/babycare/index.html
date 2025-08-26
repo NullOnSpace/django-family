@@ -3,6 +3,7 @@
 {% block title %}主页{% endblock %}
 
 {% block main %}
+<a class="btn btn-primary" href="{% url 'babycare:create_baby_date' %}">+ 创建新的宝宝信息</a>
 <div class="row font-monospace">
     <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' %}">
     <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">

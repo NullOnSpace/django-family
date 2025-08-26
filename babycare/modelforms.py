@@ -1,6 +1,26 @@
 from django import forms
 
-from .models import Feeding, BreastBumping, BodyTemperature, GrowthData
+from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDate
+
+
+class BabyDateForm(forms.ModelForm):
+    class Meta:
+        model = BabyDate
+        fields = ['nickname', 'last_menstrual_period', 'estimated_due_date', 'birthday', 'ultrasound_fixed_days']
+        widgets = {
+            'nickname': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            'last_menstrual_period': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'type': 'date'}),
+            'estimated_due_date': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'type': 'date'}),
+            'birthday': forms.DateTimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'datetime-local'}),
+            'ultrasound_fixed_days': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
+        }
+        labels = {
+            'nickname': '宝宝昵称',
+            'last_menstrual_period': '最后一次月经',
+            'estimated_due_date': '预产期',
+            'birthday': '出生日期',
+            'ultrasound_fixed_days': '超声修正天数',
+        }
 
 
 class FeedingForm(forms.ModelForm):

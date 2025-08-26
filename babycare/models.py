@@ -2,8 +2,10 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 from utils.datetime import get_local_date
+
 
 class EarlierThanLMPError(Exception):
     """Exception raised when the date is earlier than the last menstrual period."""
@@ -84,8 +86,8 @@ class BabyDate(models.Model):
         if not self.is_born(date):
             raise NotBornError(
                 f"The date for chronological age: {date} is earlier than the birthday: {self.birthday}.")
-        else:
-            return (date - get_local_date(self.birthday)).days + 1  # type: ignore
+        else:            
+            return (date - get_local_date(self.birthday)).days + 1 # type: ignore
 
     def get_corrected_age_days(self, date: datetime.date | None = None) -> int:
         """
@@ -149,9 +151,31 @@ class BabyDate(models.Model):
         :return: 如果是早产，返回True，否则返回False
         """
         return self.is_born() and self.get_gestational_age_days(get_local_date(self.birthday)) < 259  # type: ignore
-    
+
     def __str__(self):
         return self.nickname
+
+
+class BabyRelation(models.Model):
+    REQUEST_STATUS = (
+        (1, "申请中"),
+        (2, "已拒绝"),
+        (3, "监护人"),
+        (4, "亲人"),
+        (5, "关心的人"),
+    )
+    baby_date = models.ForeignKey(
+        BabyDate, on_delete=models.CASCADE, related_name='relations')
+    request_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="baby_relations")
+    request_at = models.DateTimeField(auto_now_add=True)
+    approve_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="baby_approveds")
+    approve_at = models.DateTimeField(null=True, blank=True)
+    status = models.PositiveIntegerField(choices=REQUEST_STATUS)
+
+    def __str__(self):
+        return f"{self.request_by} - {self.baby_date}"
 
 
 class Feeding(models.Model):
@@ -163,7 +187,7 @@ class Feeding(models.Model):
 
     def __str__(self):
         return f"Feeding on {self.feed_at} - {self.amount}ml"
-    
+
     @classmethod
     def get_recent_feedings(cls, limit=9):
         """

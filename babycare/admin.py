@@ -1,17 +1,18 @@
 from django.contrib import admin
 
-from .models import BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData
+from . import models
 
 
-admin.site.register(BabyDate)
-admin.site.register(BreastBumping)
-admin.site.register(BodyTemperature)
+admin.site.register(models.BabyDate)
+admin.site.register(models.BreastBumping)
+admin.site.register(models.BodyTemperature)
+admin.site.register(models.BabyRelation)
 
 
-@admin.register(GrowthData)
+@admin.register(models.GrowthData)
 class GrowthDataAdmin(admin.ModelAdmin):
     fields = ('baby_date', 'date', 'weight', 'height', 'head_circumference', 'notes')
 
-@admin.register(Feeding)
+@admin.register(models.Feeding)
 class FeedingAdmin(admin.ModelAdmin):
     fields = ('baby_date', 'date', 'amount', 'note')

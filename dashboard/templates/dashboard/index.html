@@ -11,7 +11,7 @@
     </div>
     <div class="switcher-contents">
         {% for baby in babies %}
-        <div class="switcher-content{% if forloop.first %} active-content{% endif %}" id="baby{{ baby.baby_date.id }}">
+        <div class="switcher-content block-switcher{% if forloop.first %} active-content{% endif %}" id="baby{{ baby.baby_date.id }}">
             <section>
                 {% include "babycare/includes/babydate.html" with baby_date=baby.baby_date %}
             </section>

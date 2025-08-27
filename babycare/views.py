@@ -4,7 +4,7 @@ from datetime import timedelta, datetime, time
 
 from django.utils import timezone, dateparse
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
@@ -72,9 +72,15 @@ def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:
     form = FeedingForm(request.POST)
     if form.is_valid():
         feeding = form.save(commit=False)
-        # (fixme) babydate应该是和提交用户相关
-        feeding.baby_date = models.BabyDate.objects.first()
-        feeding.save()
+        relation = models.BabyRelation.objects.filter(
+            baby_date=feeding.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.feedable_status(),
+        ).exists()
+        if relation:
+            feeding.save()
+        else:
+            return HttpResponseForbidden()
     else:
         print(form.errors)
     url = reverse('dashboard:index')
@@ -90,9 +96,15 @@ def fetch_submit_breast_bumping(request: HttpRequest) -> HttpResponse:
     form = BreastBumpingForm(request.POST)
     if form.is_valid():
         breast_bumping = form.save(commit=False)
-        # (fixme) babydate应该是和提交用户相关
-        breast_bumping.baby_date = models.BabyDate.objects.first()
-        breast_bumping.save()
+        relation = models.BabyRelation.objects.filter(
+            baby_date=breast_bumping.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.feedable_status(),
+        ).exists()
+        if relation:
+            breast_bumping.save()
+        else:
+            return HttpResponseForbidden()
     else:
         print(form.errors)
     url = reverse('dashboard:index')
@@ -108,9 +120,15 @@ def fetch_submit_body_temperature(request: HttpRequest) -> HttpResponse:
     form = BodyTemperatureForm(request.POST)
     if form.is_valid():
         body_temperature = form.save(commit=False)
-        # (fixme) babydate应该是和提交用户相关
-        body_temperature.baby_date = models.BabyDate.objects.first()
-        body_temperature.save()
+        relation = models.BabyRelation.objects.filter(
+            baby_date=body_temperature.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.feedable_status(),
+        ).exists()
+        if relation:
+            body_temperature.save()
+        else:
+            return HttpResponseForbidden()
     else:
         print(form.errors)
     url = reverse('dashboard:index')
@@ -126,9 +144,15 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     form = GrowthDataForm(request.POST)
     if form.is_valid():
         growth_data = form.save(commit=False)
-        # (fixme) babydate应该是和提交用户相关
-        growth_data.baby_date = models.BabyDate.objects.first()
-        growth_data.save()
+        relation = models.BabyRelation.objects.filter(
+            baby_date=growth_data.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.feedable_status(),
+        ).exists()
+        if relation:
+            growth_data.save()
+        else:
+            return HttpResponseForbidden()
     else:
         print(form.errors)
     url = reverse('dashboard:index')

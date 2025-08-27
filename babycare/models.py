@@ -158,11 +158,11 @@ class BabyDate(models.Model):
 
 class BabyRelation(models.Model):
     REQUEST_STATUS = (
-        (1, "申请中"),
-        (2, "已拒绝"),
-        (3, "监护人"),
-        (4, "亲人"),
-        (5, "关心的人"),
+        (0, "申请中"),
+        (1, "已拒绝"),
+        (2, "监护人"),
+        (3, "亲人"),
+        (4, "关心的人"),
     )
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='relations')
@@ -176,6 +176,18 @@ class BabyRelation(models.Model):
 
     def __str__(self):
         return f"{self.request_by} - {self.baby_date}"
+    
+    @staticmethod
+    def accessible_status():
+        return (2, 3, 4)
+    
+    @staticmethod
+    def feedable_status():
+        return (2, 3, 4)
+    
+    @staticmethod
+    def grantable_status():
+        return (2, )
 
 
 class Feeding(models.Model):
@@ -189,13 +201,13 @@ class Feeding(models.Model):
         return f"Feeding on {self.feed_at} - {self.amount}ml"
 
     @classmethod
-    def get_recent_feedings(cls, limit=9):
+    def get_recent_feedings(cls, baby_date_id, limit=9):
         """
         获取最近的喂养记录
         :param limit: 返回的记录数量，默认为9
         :return: 最近的喂养记录列表
         """
-        return cls.objects.filter(baby_date__isnull=False).order_by('-feed_at')[:limit]
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-feed_at')[:limit]
 
 
 class BreastBumping(models.Model):
@@ -262,13 +274,13 @@ class BodyTemperature(models.Model):
     notes = models.TextField(blank=True, null=True)  # 备注
 
     @classmethod
-    def get_recent_body_temperatures(cls, limit=7):
+    def get_recent_body_temperatures(cls, baby_date_id, limit=7):
         """
         获取最近的体温记录
         :param limit: 返回的记录数量，默认为7
         :return: 最近的体温记录列表
         """
-        return cls.objects.filter(baby_date__isnull=False).order_by('-measure_at')[:limit]
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-measure_at')[:limit]
 
     def __str__(self):
         return f"Body Temperature on {self.measure_at} - {self.temperature}°C"
@@ -276,7 +288,7 @@ class BodyTemperature(models.Model):
 
 class GrowthData(models.Model):
     baby_date = models.ForeignKey(
-        BabyDate, on_delete=models.CASCADE, related_name='growth_data')
+        BabyDate, on_delete=models.CASCADE, related_name='growth_datas')
     date = models.DateTimeField(default=timezone.now)
     weight = models.FloatField(blank=True, null=True)  # 体重，单位为千克
     height = models.FloatField(blank=True, null=True)  # 身高，单位为厘米
@@ -284,13 +296,13 @@ class GrowthData(models.Model):
     notes = models.TextField(blank=True, null=True)  # 备注
 
     @classmethod
-    def get_recent_growth_data(cls, limit=10):
+    def get_recent_growth_data(cls, baby_date_id, limit=10):
         """
         获取最近的生长数据记录
         :param limit: 返回的记录数量，默认为10
         :return: 最近的生长数据记录列表
         """
-        return cls.objects.filter(baby_date__isnull=False).order_by('-date')[:limit]
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-date')[:limit]
 
     def __str__(self):
         return f"Growth Data on {self.date} - Weight: {self.weight}kg, Height: {self.height}cm, Head Circumference: {self.head_circumference}cm"

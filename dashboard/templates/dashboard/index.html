@@ -3,11 +3,24 @@
 {% block title %}主页{% endblock %}
 
 {% block main %}
-<section>
-    {% include "babycare/includes/babydate.html" %}
-</section>
-<section>
-    <h2>成长记录</h2>
-    {% include "babycare/includes/baby_record.html" %}
-</section>
+<div class="switcher">
+    <div class="switcher-buttons">
+        {% for baby in babies %}
+        <div class="switcher-button{% if forloop.first %} active-button{% endif %}" data-target="baby{{ baby.baby_date.id }}">{{ baby.baby_date.nickname }}</div>
+        {% endfor %}
+    </div>
+    <div class="switcher-contents">
+        {% for baby in babies %}
+        <div class="switcher-content{% if forloop.first %} active-content{% endif %}" id="baby{{ baby.baby_date.id }}">
+            <section>
+                {% include "babycare/includes/babydate.html" with baby_date=baby.baby_date %}
+            </section>
+            <section>
+                <h2>成长记录</h2>
+                {% include "babycare/includes/baby_record.html" with baby_date=baby.baby_date feedings=baby.feedings feeding_form=baby.feeding_form body_temperatures=baby.body_temperatures body_temperature_form=baby.body_temperature_form growth_data=baby.growth_data growth_data_form=baby.growth_data_form %}
+            </section>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

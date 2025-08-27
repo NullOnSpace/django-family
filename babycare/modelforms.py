@@ -26,8 +26,9 @@ class BabyDateForm(forms.ModelForm):
 class FeedingForm(forms.ModelForm):
     class Meta:
         model = Feeding
-        fields = ['amount', 'note']
+        fields = ['baby_date', 'amount', 'note']
         widgets = {
+            'baby_date': forms.HiddenInput(),
             'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
             'note': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 1}),
         }
@@ -54,8 +55,9 @@ class BreastBumpingForm(forms.ModelForm):
 class BodyTemperatureForm(forms.ModelForm):
     class Meta:
         model = BodyTemperature
-        fields = ['temperature', 'measurement', 'notes']
+        fields = ['baby_date', 'temperature', 'measurement', 'notes']
         widgets = {
+            'baby_date': forms.HiddenInput(),
             'temperature': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
             'measurement': forms.Select(attrs={'class': 'form-select form-control-sm'}),
             'notes': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 1}),
@@ -70,8 +72,9 @@ class BodyTemperatureForm(forms.ModelForm):
 class GrowthDataForm(forms.ModelForm):
     class Meta:
         model = GrowthData
-        fields = ['weight', 'height', 'head_circumference']
+        fields = ['baby_date', 'weight', 'height', 'head_circumference']
         widgets = {
+            'baby_date': forms.HiddenInput(),
             'weight': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
             'height': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
             'head_circumference': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),

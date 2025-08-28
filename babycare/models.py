@@ -182,7 +182,7 @@ class BabyRelation(models.Model):
         return (2, 3, 4)
     
     @staticmethod
-    def feedable_status():
+    def editable_status():
         return (2, 3, 4)
     
     @staticmethod
@@ -196,6 +196,9 @@ class Feeding(models.Model):
     feed_at = models.DateTimeField(default=timezone.now)
     amount = models.FloatField()  # 喂养量，单位为毫升
     note = models.TextField(blank=True, null=True)  # 备注
+
+    class Meta:
+        get_latest_by = 'feed_at'
 
     def __str__(self):
         return f"Feeding on {self.feed_at} - {self.amount}ml"
@@ -273,8 +276,11 @@ class BodyTemperature(models.Model):
         max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')  # 测量方式
     notes = models.TextField(blank=True, null=True)  # 备注
 
+    class Meta:
+        get_latest_by = 'measure_at'
+
     @classmethod
-    def get_recent_body_temperatures(cls, baby_date_id, limit=7):
+    def get_recent_temp(cls, baby_date_id, limit=7):
         """
         获取最近的体温记录
         :param limit: 返回的记录数量，默认为7

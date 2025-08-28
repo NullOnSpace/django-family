@@ -15,9 +15,9 @@ urlpatterns = [
          name='fetch_submit_growth_data'),
 
     path('', views.index, name='index'),
-    path('feedings/', views.feeding_list, name='feedings_list'),
     path('create/', views.create_baby_date, name='create_baby_date'),
-    path('body_temperatures/', views.BodyTemperatureListView.as_view(),
+    path('feedings/<int:baby_date_id>/', views.feeding_list, name='feedings_list'),
+    path('body_temperatures/<int:baby_date_id>', views.BodyTemperatureListView.as_view(),
            name='body_temperatures_list'),
-    path('growth_datas/', views.GrowthDataListView.as_view(), name='growth_datas_list'),
+    path('growth_datas/<int:baby_date_id>', views.GrowthDataListView.as_view(), name='growth_datas_list'),
 ]

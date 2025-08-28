@@ -4,26 +4,32 @@
 
 {% block main %}
 <a class="btn btn-primary" href="{% url 'babycare:create_baby_date' %}">+ 创建新的宝宝信息</a>
-<div class="row font-monospace">
-    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' %}">
+{% for baby_date_id, nickname, last_feeding_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data in babies %}
+<div class="row font-monospace my-3">
+    <h2>{{ nickname }}</h2>
+    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' baby_date_id=baby_date_id %}">
     <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
-        <div class="text-start fs-6">前一天喂奶量:</div>
-        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feeding_amount|floatformat:"0" }}mL</div>
+        <div class="text-start fs-6">上一次全天喂奶量:</div>
+        <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feeding_amount|floatformat:"0" }}mL</div>
+        <div class="text-end fs-6">{{ last_feeding_date|date:"Y-m-d" }}</div>
     </div>
     </a>
-    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:body_temperatures_list' %}">
+    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:body_temperatures_list' baby_date_id=baby_date_id %}">
     <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
         <div class="text-start fs-6">上一次体温:</div>
-        <div class="text-start fs-1 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature|floatformat:"1" }}°C</div>
+        <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature|floatformat:"1" }}°C</div>
+        <div class="text-end fs-6">{{ last_body_temperature_date|date:"Y-m-d" }}</div>
     </div>
     </a>
 <!-- 
     <div class="border border-primary-subtle shadow col-lg-3 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto p-3">
         <div class="text-center h3">
-            <a href="{% url 'babycare:growth_datas_list' %}">生长数据</a>
+            <a href="{% url 'babycare:growth_datas_list' baby_date_id=baby_date_id %}">生长数据</a>
         </div>
     </div> -->
 </div>
+<hr>
+{% endfor %}
 {% endblock %}
 
 {% block aside %}

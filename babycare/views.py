@@ -2,7 +2,7 @@ from typing import Any, Dict
 import zoneinfo
 from datetime import timedelta, datetime, time
 
-from django.utils import timezone, dateparse
+from django.utils import timezone, dateparse, decorators
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.urls import reverse
@@ -20,22 +20,26 @@ from utils.datetime import get_local_date, get_range_of_date
 # Create your views here.
 @login_or_404
 def index(request: HttpRequest) -> HttpResponse:
-    """
-    Render the index page of the baby care dashboard.
-    """
-    yesterday = get_local_date(timezone.now()) - timedelta(days=1)
-    yesterday_range = get_range_of_date(yesterday)
-    last_feeding = models.Feeding.objects.filter(
-        feed_at__range=yesterday_range)
-    last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
-    last_body_temperature = models.BodyTemperature.objects.latest("measure_at")
-    last_growth_data = models.GrowthData.objects.latest("date")
-    context = {
-        'active': 'babycare',
-        'last_feeding_amount': last_feeding_amount,
-        "last_body_temperature": last_body_temperature,
-        "last_growth_data": last_growth_data,
-    }
+    baby_dates = models.BabyRelation.objects.filter(
+        request_by=request.user,
+        status__in=models.BabyRelation.accessible_status(),
+    ).values_list('baby_date__id', 'baby_date__nickname')
+    context = dict()
+    context['active'] = 'babycare'
+    context['babies'] = babies = []
+    for baby_date_id, nickname in baby_dates:
+        last_feeding = models.Feeding.objects.filter(
+            baby_date=baby_date_id).latest()
+        last_feeding_date = get_local_date(last_feeding.feed_at)
+        last_feeding_day_range = get_range_of_date(last_feeding_date)
+        last_feeding = models.Feeding.objects.filter(
+            feed_at__range=last_feeding_day_range)
+        last_feeding_amount = sum(map(lambda x: x.amount, last_feeding))
+        last_body_temperature = models.BodyTemperature.objects.filter(
+            baby_date=baby_date_id).latest()
+        last_body_temperature_date = get_local_date(last_body_temperature.measure_at)
+        last_growth_data = models.GrowthData.objects.latest("date")
+        babies.append((baby_date_id, nickname, last_feeding_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data))
     return render(request, 'babycare/index.html', context)
 
 @login_or_404
@@ -75,7 +79,7 @@ def fetch_submit_feeding(request: HttpRequest) -> HttpResponse:
         relation = models.BabyRelation.objects.filter(
             baby_date=feeding.baby_date,
             request_by=request.user,
-            status__in=models.BabyRelation.feedable_status(),
+            status__in=models.BabyRelation.editable_status(),
         ).exists()
         if relation:
             feeding.save()
@@ -99,7 +103,7 @@ def fetch_submit_breast_bumping(request: HttpRequest) -> HttpResponse:
         relation = models.BabyRelation.objects.filter(
             baby_date=breast_bumping.baby_date,
             request_by=request.user,
-            status__in=models.BabyRelation.feedable_status(),
+            status__in=models.BabyRelation.editable_status(),
         ).exists()
         if relation:
             breast_bumping.save()
@@ -123,7 +127,7 @@ def fetch_submit_body_temperature(request: HttpRequest) -> HttpResponse:
         relation = models.BabyRelation.objects.filter(
             baby_date=body_temperature.baby_date,
             request_by=request.user,
-            status__in=models.BabyRelation.feedable_status(),
+            status__in=models.BabyRelation.editable_status(),
         ).exists()
         if relation:
             body_temperature.save()
@@ -147,7 +151,7 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
         relation = models.BabyRelation.objects.filter(
             baby_date=growth_data.baby_date,
             request_by=request.user,
-            status__in=models.BabyRelation.feedable_status(),
+            status__in=models.BabyRelation.editable_status(),
         ).exists()
         if relation:
             growth_data.save()
@@ -161,7 +165,7 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
 
 
 @login_or_404
-def feeding_list(request: HttpRequest):
+def feeding_list(request: HttpRequest, baby_date_id: int):
     feed_date_str = request.GET.get('date', '')
     feed_date = dateparse.parse_date(feed_date_str)
     if feed_date is None:
@@ -170,7 +174,7 @@ def feeding_list(request: HttpRequest):
     context['previous_day'] = feed_date - timedelta(1)
     if feed_date < timezone.localdate():
         context['next_day'] = feed_date + timedelta(1)
-    context['feedings'] = feedings = models.Feeding.objects.filter(baby_date__isnull=False).filter(
+    context['feedings'] = feedings = models.Feeding.objects.filter(baby_date=baby_date_id).filter(
         feed_at__range=get_range_of_date(feed_date)).order_by('-feed_at')
     if feedings:
         context['feedings_total'] = feedings.aggregate(Sum('amount'))
@@ -178,6 +182,7 @@ def feeding_list(request: HttpRequest):
     return render(request, 'babycare/feedings_list.html', context)
 
 
+decorators.method_decorator(login_or_404, name='dispatch')
 class BodyTemperatureListView(ListView):
     """
     View to list all body temperatures.
@@ -188,7 +193,7 @@ class BodyTemperatureListView(ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        return models.BodyTemperature.objects.filter(baby_date__isnull=False).order_by('-measure_at')
+        return models.BodyTemperature.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-measure_at')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -196,6 +201,7 @@ class BodyTemperatureListView(ListView):
         return context
 
 
+decorators.method_decorator(login_or_404, name='dispatch')
 class GrowthDataListView(ListView):
     """
     View to list all growth data.
@@ -206,7 +212,7 @@ class GrowthDataListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return models.GrowthData.objects.filter(baby_date__isnull=False).order_by('-date')
+        return models.GrowthData.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-date')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

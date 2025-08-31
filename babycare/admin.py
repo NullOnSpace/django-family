@@ -14,4 +14,4 @@ class GrowthDataAdmin(admin.ModelAdmin):
 
 @admin.register(Feeding)
 class FeedingAdmin(admin.ModelAdmin):
-    fields = ('baby_date', 'date', 'amount', 'note')
+    fields = ('baby_date', 'feed_at', 'amount', 'note')

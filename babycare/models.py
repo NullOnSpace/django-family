@@ -295,11 +295,14 @@ class BodyTemperature(models.Model):
 class GrowthData(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='growth_datas')
-    date = models.DateTimeField(default=timezone.now)
+    record_at = models.DateTimeField(default=timezone.now)
     weight = models.FloatField(blank=True, null=True)  # 体重，单位为千克
     height = models.FloatField(blank=True, null=True)  # 身高，单位为厘米
     head_circumference = models.FloatField(blank=True, null=True)  # 头围，单位为厘米
     notes = models.TextField(blank=True, null=True)  # 备注
+
+    class Meta:
+        get_latest_by = 'record_at'
 
     @classmethod
     def get_recent_growth_data(cls, baby_date_id, limit=10):
@@ -308,7 +311,7 @@ class GrowthData(models.Model):
         :param limit: 返回的记录数量，默认为10
         :return: 最近的生长数据记录列表
         """
-        return cls.objects.filter(baby_date=baby_date_id).order_by('-date')[:limit]
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-record_at')[:limit]
 
     def __str__(self):
-        return f"Growth Data on {self.date} - Weight: {self.weight}kg, Height: {self.height}cm, Head Circumference: {self.head_circumference}cm"
+        return f"Growth Data on {self.record_at} - Weight: {self.weight}kg, Height: {self.height}cm, Head Circumference: {self.head_circumference}cm"

@@ -10,7 +10,7 @@
     <tbody>
         {% for growth in growth_data %}
             <tr>
-                <td>{{ growth.date|date:"Y-m-d" }}{% if growth.notes %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ growth.notes }}"></i>{% endif %}</td>
+                <td>{{ growth.record_at|date:"Y-m-d" }}{% if growth.notes %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ growth.notes }}"></i>{% endif %}</td>
                 <td>{{ growth.weight|default:"-" }}</td>
                 <td>{{ growth.height|default:"-" }}</td>
                 <td>{{ growth.head_circumference|default:"-" }}</td>

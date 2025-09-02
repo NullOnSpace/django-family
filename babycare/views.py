@@ -38,7 +38,9 @@ def index(request: HttpRequest) -> HttpResponse:
         last_body_temperature = models.BodyTemperature.objects.filter(
             baby_date=baby_date_id).latest()
         last_body_temperature_date = get_local_date(last_body_temperature.measure_at)
-        last_growth_data = models.GrowthData.objects.latest("date")
+        last_growth_data = models.GrowthData.objects.filter(
+            baby_date=baby_date_id,
+        ).latest()
         babies.append((baby_date_id, nickname, last_feeding_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data))
     return render(request, 'babycare/index.html', context)
 

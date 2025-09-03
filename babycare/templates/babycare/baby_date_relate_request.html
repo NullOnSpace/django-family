@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}关联宝宝{% endblock %}
+
+{% block main %}
+<form class="form-control" action="" method="POST">
+    <label for="baby-nickname">关心的宝宝昵称:</label>
+    <input type="text" name="nickname" id="baby-nickname">
+    {% csrf_token %}
+    <button class="btn btn-primary">关联宝宝</button>
+</form>
+{% endblock %}
+
+{% block aside %}
+{% endblock %}

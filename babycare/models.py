@@ -86,8 +86,8 @@ class BabyDate(models.Model):
         if not self.is_born(date):
             raise NotBornError(
                 f"The date for chronological age: {date} is earlier than the birthday: {self.birthday}.")
-        else:            
-            return (date - get_local_date(self.birthday)).days + 1 # type: ignore
+        else:
+            return (date - get_local_date(self.birthday)).days + 1  # type: ignore
 
     def get_corrected_age_days(self, date: datetime.date | None = None) -> int:
         """
@@ -170,24 +170,57 @@ class BabyRelation(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="baby_relations")
     request_at = models.DateTimeField(auto_now_add=True)
     approve_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="baby_approveds")
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="baby_approveds",
+        null=True,
+        blank=True
+    )
     approve_at = models.DateTimeField(null=True, blank=True)
-    status = models.PositiveIntegerField(choices=REQUEST_STATUS)
+    status = models.PositiveIntegerField(choices=REQUEST_STATUS, default=0)
 
     def __str__(self):
-        return f"{self.request_by} - {self.baby_date}"
-    
+        return f"{self.request_by} - {self.baby_date} - {self.get_status_display()}" # type: ignore
+
     @staticmethod
     def accessible_status():
+        """可以访问baby相关的状态"""
         return (2, 3, 4)
-    
+
     @staticmethod
     def editable_status():
+        """可以编辑baby相关的状态"""
         return (2, 3, 4)
     
     @staticmethod
+    def pending_status():
+        """待处理的状态"""
+        return (0, )
+
+    @staticmethod
     def grantable_status():
+        """有授权权限的状态"""
         return (2, )
+    
+    @staticmethod
+    def granted_status():
+        """处理后的状态,包括拒绝"""
+        return (1, 2, 3, 4)
+    
+    @staticmethod
+    def reject_status():
+        """拒绝的状态"""
+        return (1, )
+    
+    def can_be_approved_by(self, user) -> bool:
+        """用户是否可以审批该申请
+        即当前baby_date的关系中存在一个该用户为grantable_status的关系
+        """
+        return BabyRelation.objects.filter(
+            baby_date=self.baby_date,
+            status__in=BabyRelation.grantable_status(),
+            request_by=user,
+        ).exists()
 
 
 class Feeding(models.Model):

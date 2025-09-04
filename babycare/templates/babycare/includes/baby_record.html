@@ -1,3 +1,5 @@
+{% load babycare_tags %}
+
 <div id="baby-record-wrapper" class="switcher" data-switcher-name="babycare">
     <div class="switcher-buttons d-inline-flex" id="baby-record-buttons">
         <span class="switcher-button{% if babycare_active == 'baby-feeding' %} active-button{% endif %}" data-target="baby-feeding">喂奶量</span>
@@ -13,6 +15,9 @@
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 
                 </form>
             </div>
+            {% if feedings %}
+            <div class="my-1 p-1">距离上次喂奶过去了 {{ feedings.0.feed_at|zh_timesince }}</div>
+            {% endif %}
             <div>
                 {% include 'babycare/includes/feedings_list_table.html' %}
             </div>

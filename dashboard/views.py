@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
+from django.utils import timezone
 
 from babycare.models import BabyRelation, BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData
 from babycare.modelforms import FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm
@@ -34,14 +35,18 @@ def index(request: HttpRequest) -> HttpResponse:
     for baby_date in BabyDate.objects.filter(id__in=baby_dates):
         baby = dict()
         baby['baby_date'] = baby_date
+
         baby['feedings'] = Feeding.get_recent_feedings(baby_date.pk)
         baby['feeding_form'] = FeedingForm(initial={'baby_date': baby_date.pk})
+            
         baby['body_temperatures'] = BodyTemperature.get_recent_temp(
             baby_date.pk)
         baby['body_temperature_form'] = BodyTemperatureForm(
             initial={'baby_date': baby_date.pk})
+        
         baby['growth_data'] = GrowthData.get_recent_growth_data(baby_date.pk)
         baby['growth_data_form'] = GrowthDataForm(
             initial={'baby_date': baby_date.pk})
+        
         babies.append(baby)
     return render(request, 'dashboard/index.html', context)

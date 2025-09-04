@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
+
 from django import template
+from django.utils import timezone
 
 from ..models import BabyDate
 
@@ -25,3 +28,16 @@ def get_age_months(days: int) -> str:
     :return: 月龄和天数
     """
     return f"{days // 30}月{days % 30}天" if days >= 0 else f"尚未开始计算月龄"
+
+@register.filter
+def zh_timesince(dt: datetime, conference: datetime | None = None):
+    if conference is None:
+        conference = timezone.now()
+    delta = conference - dt
+    res = ""
+    if delta.days > 0:
+        res += f"{delta.days}天"
+    if delta.seconds > 0:
+        res += f"{delta.seconds // 3600}小时"
+        res += f"{delta.seconds % 3600 // 60}分钟"
+    return res

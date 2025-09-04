@@ -43,7 +43,7 @@ class FeedingForm(forms.ModelForm):
 class FeedingWithTimeForm(forms.ModelForm):
     feed_at = forms.SplitDateTimeField(label="时间", widget=forms.SplitDateTimeWidget(
         date_attrs={'type': 'hidden'},
-        time_attrs={'type': 'time'},
+        time_attrs={'type': 'time', 'style': 'width:6rem;'},
     ))
 
     class Meta:
@@ -51,7 +51,11 @@ class FeedingWithTimeForm(forms.ModelForm):
         fields = ['feed_at', 'baby_date', 'amount']
         widgets = {
             'baby_date': forms.HiddenInput(),
-            'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
+            'amount': forms.NumberInput(attrs={
+                'class': 'form-control form-control-sm',
+                'min': '0',
+                'style': 'width:6rem;',
+            }),
         }
         labels = {
             'feed_at': '时间',

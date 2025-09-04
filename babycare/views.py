@@ -42,11 +42,13 @@ def index(request: HttpRequest) -> HttpResponse:
             ))
 
     context['babies'] = babies = []
-    baby_dates = models.BabyRelation.objects.filter(
+    relations = models.BabyRelation.objects.filter(
         request_by=request.user,
         status__in=models.BabyRelation.accessible_status(),
-    ).values_list('baby_date__id', 'baby_date__nickname')
-    for baby_date_id, nickname in baby_dates:
+    ).select_related('baby_date')
+    for relation in relations:
+        baby_date_id = relation.baby_date.pk
+        nickname = relation.baby_date.nickname
         feedings = models.Feeding.objects.filter(
             baby_date=baby_date_id)
         if feedings.exists():
@@ -75,7 +77,7 @@ def index(request: HttpRequest) -> HttpResponse:
             last_growth_data = growth_data.latest()
         else:
             last_growth_data = None
-        babies.append((baby_date_id, nickname, last_feedings_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data))
+        babies.append((baby_date_id, nickname, last_feedings_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data, relation))
     return render(request, 'babycare/index.html', context)
 
 @login_or_404

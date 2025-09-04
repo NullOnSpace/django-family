@@ -188,7 +188,27 @@ class BabyRelation(models.Model):
 
     def __str__(self):
         return f"{self.request_by} - {self.baby_date} - {self.get_status_display()}" # type: ignore
-
+    
+    def can_be_approved_by(self, user) -> bool:
+        """用户是否可以审批该申请
+        即当前baby_date的关系中存在一个该用户为grantable_status的关系
+        """
+        return BabyRelation.objects.filter(
+            baby_date=self.baby_date,
+            status__in=BabyRelation.grantable_status(),
+            request_by=user,
+        ).exists()
+    
+    def status_css_class(self):
+        STATUS_CSS_CLASSES ={
+            0: 'person-fill-add',
+            1: 'person-fill-x',
+            2: 'person-gear',
+            3: 'person-hearts',
+            4: 'person-heart',
+        }
+        return STATUS_CSS_CLASSES.get(self.status, 'person-fill-slash')
+    
     @staticmethod
     def accessible_status():
         """可以访问baby相关的状态"""
@@ -218,16 +238,6 @@ class BabyRelation(models.Model):
     def reject_status():
         """拒绝的状态"""
         return (1, )
-    
-    def can_be_approved_by(self, user) -> bool:
-        """用户是否可以审批该申请
-        即当前baby_date的关系中存在一个该用户为grantable_status的关系
-        """
-        return BabyRelation.objects.filter(
-            baby_date=self.baby_date,
-            status__in=BabyRelation.grantable_status(),
-            request_by=user,
-        ).exists()
 
 
 class Feeding(models.Model):

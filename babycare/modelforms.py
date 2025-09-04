@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDate
 
@@ -6,7 +7,8 @@ from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDat
 class BabyDateForm(forms.ModelForm):
     class Meta:
         model = BabyDate
-        fields = ['nickname', 'last_menstrual_period', 'estimated_due_date', 'birthday', 'ultrasound_fixed_days']
+        fields = ['nickname', 'last_menstrual_period',
+                  'estimated_due_date', 'birthday', 'ultrasound_fixed_days']
         widgets = {
             'nickname': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
             'last_menstrual_period': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'type': 'date'}),
@@ -35,6 +37,25 @@ class FeedingForm(forms.ModelForm):
         labels = {
             'amount': '喂养量 (ml)',
             'note': '备注',
+        }
+
+
+class FeedingWithTimeForm(forms.ModelForm):
+    feed_at = forms.SplitDateTimeField(label="时间", widget=forms.SplitDateTimeWidget(
+        date_attrs={'type': 'hidden'},
+        time_attrs={'type': 'time'},
+    ))
+
+    class Meta:
+        model = Feeding
+        fields = ['feed_at', 'baby_date', 'amount']
+        widgets = {
+            'baby_date': forms.HiddenInput(),
+            'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
+        }
+        labels = {
+            'feed_at': '时间',
+            'amount': '喂养量 (ml)',
         }
 
 

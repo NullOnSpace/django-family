@@ -28,4 +28,9 @@ urlpatterns = [
     path('approve_baby_date_relate_request/',
          views.approve_baby_date_relate_request,
          name='approve_baby_date_relate_request'),
+    path(
+        'submit_feeding_with_time/',
+        views.submit_feeding_with_time,
+        name='submit_feeding_with_time',
+    ),
 ]

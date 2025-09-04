@@ -6,6 +6,20 @@
 <section>
     <h2>喂奶量</h2>
     {% include 'babycare/includes/feedings_list_table.html' %}
+    <form class="my-3" action="{% url 'babycare:submit_feeding_with_time' %}" method="POST">
+        <div class="input-group input-group-sm">
+            {% for field in feeding_form %}
+                {% if not field.is_hidden %}
+                    <span class="input-group-text">{{ field.label }}</span>
+                    {{ field }}
+                {% else %}
+                    {{ field}}
+                {% endif %}
+            {% endfor %}
+            {% csrf_token %}
+            <button class="btn btn-outline-primary" type="submit">提交</button>
+        </div>
+    </form>
     {% if feedings_total %}
     <div class="p-1 my-2">当日喂奶总量 {{ feedings_total.amount__sum }} ml</div>
     {% endif %}
@@ -14,7 +28,7 @@
             <a class="page-link" href="?date={{ previous_day|date:'Y-m-d' }}">{{ previous_day|date:'m-d' }}</a>
         </li>
         <li class="page-item active">
-            <form target="#" method="get" class="auto-submit"><input type="date" name="date" value="{{ feed_date|date:'Y-m-d' }}"></form>
+            <form target="_self" method="get" class="auto-submit"><input type="date" name="date" value="{{ feed_date|date:'Y-m-d' }}"></form>
         </li>
         {% if next_day %}
         <li class="page-item">

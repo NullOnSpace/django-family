@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 
 from django.utils import timezone, dateparse, decorators
 from django.shortcuts import render, redirect
@@ -13,7 +13,7 @@ from django.utils.html import escape
 
 from babycare import models
 from babycare.modelforms import (
-    FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm)
+    FeedingForm, FeedingWithTimeForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm)
 from iuser.decorators import login_or_404
 from utils.datetime import get_local_date, get_range_of_date
 
@@ -289,6 +289,26 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect(url)
 
 
+@require_POST
+def submit_feeding_with_time(request: HttpRequest) -> HttpResponse:
+    form = FeedingWithTimeForm(request.POST)
+    if form.is_valid():
+        feeding = form.save(commit=False)
+        if feeding.baby_date.can_be_edited_by(request.user):
+            feeding.save()
+            url = reverse(
+                'babycare:feedings_list',
+                args=[feeding.baby_date.id]
+            )
+            date_ = feeding.feed_at.astimezone(timezone.get_current_timezone())
+            date_ = date_.strftime('%Y-%m-%d')
+            url += f'?date={date_}'
+            return HttpResponseRedirect(url)
+    else:
+        print(form.errors)
+    return HttpResponseBadRequest()
+
+
 @login_or_404
 def feeding_list(request: HttpRequest, baby_date_id: int):
     feed_date_str = request.GET.get('date', '')
@@ -296,6 +316,17 @@ def feeding_list(request: HttpRequest, baby_date_id: int):
     if feed_date is None:
         feed_date = timezone.localdate()
     context: Dict[str, Any] = {'feed_date': feed_date}
+    context['active'] = 'babycare'
+    context['feeding_form'] = FeedingWithTimeForm(
+        initial={
+            'feed_at': datetime.combine(
+                feed_date,
+                time(0, 0),
+                tzinfo=timezone.localtime().tzinfo
+            ),
+            'baby_date': models.BabyDate.objects.get(pk=baby_date_id)
+        }
+    )
     context['previous_day'] = feed_date - timedelta(1)
     if feed_date < timezone.localdate():
         context['next_day'] = feed_date + timedelta(1)
@@ -303,7 +334,6 @@ def feeding_list(request: HttpRequest, baby_date_id: int):
         feed_at__range=get_range_of_date(feed_date)).order_by('-feed_at')
     if feedings:
         context['feedings_total'] = feedings.aggregate(Sum('amount'))
-    context['active'] = 'babycare'
     return render(request, 'babycare/feedings_list.html', context)
 
 

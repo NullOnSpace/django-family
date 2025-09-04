@@ -154,6 +154,13 @@ class BabyDate(models.Model):
 
     def __str__(self):
         return self.nickname
+    
+    def can_be_edited_by(self, user) -> bool:
+        return BabyRelation.objects.filter(
+            baby_date=self.pk,
+            status__in=BabyRelation.editable_status(),
+            request_by=user,
+        ).exists()
 
 
 class BabyRelation(models.Model):
@@ -235,6 +242,9 @@ class Feeding(models.Model):
 
     def __str__(self):
         return f"Feeding on {self.feed_at} - {self.amount}ml"
+    
+    def can_be_edited_by(self, user):
+        return self.baby_date.can_be_edited_by(user)
 
     @classmethod
     def get_recent_feedings(cls, baby_date_id, limit=9):

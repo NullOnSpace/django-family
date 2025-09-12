@@ -369,7 +369,7 @@ class GrowthDataListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return models.GrowthData.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-date')
+        return models.GrowthData.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-record_at')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

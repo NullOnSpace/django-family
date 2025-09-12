@@ -245,13 +245,13 @@ class Feeding(models.Model):
         BabyDate, on_delete=models.CASCADE, related_name='feedings')
     feed_at = models.DateTimeField(default=timezone.now)
     amount = models.FloatField()  # 喂养量，单位为毫升
-    note = models.TextField(blank=True, null=True)  # 备注
-
+    note = models.TextField(blank=True, null=True)
     class Meta:
         get_latest_by = 'feed_at'
 
     def __str__(self):
-        return f"Feeding on {self.feed_at} - {self.amount}ml"
+        feed_at_local = timezone.localtime(self.feed_at)
+        return f"Feeding on {feed_at_local} - {self.amount}ml"
     
     def can_be_edited_by(self, user):
         return self.baby_date.can_be_edited_by(user)

@@ -3,10 +3,12 @@
 {% block title %}主页{% endblock %}
 
 {% block main %}
+{% if babies %}
 <div class="switcher">
     <div class="switcher-buttons">
         {% for baby in babies %}
         <div class="switcher-button{% if forloop.first %} active-button{% endif %}" data-target="baby{{ baby.baby_date.id }}">{{ baby.baby_date.nickname }}</div>
+        {% empty %}
         {% endfor %}
     </div>
     <div class="switcher-contents">
@@ -23,4 +25,7 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+    {% include 'babycare/includes/baby_create_or_link.html' %}
+{% endif %}
 {% endblock %}

@@ -6,6 +6,7 @@ from . import models
 admin.site.register(models.BabyDate)
 admin.site.register(models.BreastBumping)
 admin.site.register(models.BodyTemperature)
+admin.site.register(models.Diaper)
 admin.site.register(models.BabyRelation)
 
 

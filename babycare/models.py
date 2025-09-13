@@ -277,8 +277,9 @@ class BreastBumping(models.Model):
         return f"Breast Bumping on {self.date} - {self.amount}ml"
 
 
-class Pooh(models.Model):
+class Diaper(models.Model):
     POOH_AMOUNT_CHOICES = [
+        ('0', '无'),
         ('1', '少量'),
         ('2', '中等'),
         ('3', '大量'),
@@ -288,29 +289,62 @@ class Pooh(models.Model):
         '金黄色': {'rgb': 'RGB(255, 215, 0)', 'hex': '#FFD700', 'cause': '母乳喂养', 'significance': '正常健康便便', 'need_medical': '无需担心'},
         '黄褐色': {'rgb': 'RGB(210, 180, 140)', 'hex': '#D2B48C', 'cause': '配方奶喂养', 'significance': '正常健康便便', 'need_medical': '无需担心'},
         '浅黄色': {'rgb': 'RGB(255, 255, 150)', 'hex': '#FFFF96', 'cause': '母乳前奶摄入多', 'significance': '正常，可能稍稀', 'need_medical': '观察'},
-        '橙色': {'rgb': 'RGB(255, 165, 0)', 'hex': '#FFA500', 'cause': '食物色素（如胡萝卜）', 'significance': '通常无害', 'need_medical': '观察'},
         '绿色（正常）': {'rgb': 'RGB(100, 180, 80)', 'hex': '#64B450', 'cause': '铁剂、食物氧化、胆汁代谢', 'significance': '通常无害', 'need_medical': '观察'},
-        '白色颗粒（奶瓣）': {'rgb': 'RGB(240, 240, 240)', 'hex': '#F0F0F0', 'cause': '未完全消化的奶', 'significance': '消化系统未成熟', 'need_medical': '少量无需担心'},
         '深绿色（黏液）': {'rgb': 'RGB(50, 100, 50)', 'hex': '#326432', 'cause': '肠道感染、乳糖不耐受', 'significance': '可能腹泻或消化不良', 'need_medical': '伴随症状需就医'},
+        '白色颗粒（奶瓣）': {'rgb': 'RGB(240, 240, 240)', 'hex': '#F0F0F0', 'cause': '未完全消化的奶', 'significance': '消化系统未成熟', 'need_medical': '少量无需担心'},
+        '粉红色（黏液）': {'rgb': 'RGB(255, 180, 180)', 'hex': '#FFB4B4', 'cause': '牛奶蛋白过敏、轻微肠炎', 'significance': '可能含少量血', 'need_medical': '观察，持续需就医'},
+        '橙色': {'rgb': 'RGB(255, 165, 0)', 'hex': '#FFA500', 'cause': '食物色素（如胡萝卜）', 'significance': '通常无害', 'need_medical': '观察'},
         '墨绿色（胎便）': {'rgb': 'RGB(30, 60, 30)', 'hex': '#1E3C1E', 'cause': '新生儿出生后2-3天', 'significance': '正常胎便', 'need_medical': '无需担心'},
         '灰白色/陶土色': {'rgb': 'RGB(200, 200, 180)', 'hex': '#C8C8B4', 'cause': '胆道闭锁、胆汁缺乏', 'significance': '严重肝胆问题', 'need_medical': '立即就医'},
         '黑色（柏油样）': {'rgb': 'RGB(70, 50, 50)', 'hex': '#463232', 'cause': '上消化道出血（如胃溃疡）', 'significance': '可能含血', 'need_medical': '立即就医'},
         '鲜红色（血便）': {'rgb': 'RGB(255, 50, 50)', 'hex': '#FF3232', 'cause': '肛裂、肠炎、过敏', 'significance': '下消化道出血', 'need_medical': '需就医'},
-        '粉红色（黏液）': {'rgb': 'RGB(255, 180, 180)', 'hex': '#FFB4B4', 'cause': '牛奶蛋白过敏、轻微肠炎', 'significance': '可能含少量血', 'need_medical': '观察，持续需就医'},
     }
+
+    PEE_AMOUNT_CHOICES = (
+        ('0', '无'),
+        ('1', '少量'),
+        ('2', '正常'),
+        ('3', '大量'),
+    )
+
+    PEE_COLOR_CHOICES = (
+        ('0', '微黄'),
+        ('1', '透明'),
+        ('2', '深黄'),
+    )
 
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='poohs')
-    date = models.DateTimeField(default=timezone.now)
-    amount = models.CharField(
-        max_length=12, choices=POOH_AMOUNT_CHOICES)  # 大便量
-    color = models.CharField(
+    create_at = models.DateTimeField(default=timezone.now)
+    pooh_amount = models.CharField(
+        max_length=12, choices=POOH_AMOUNT_CHOICES, default='0')
+    pooh_color = models.CharField(
         max_length=40,
         choices=zip(POOH_COLOR_CHOICES.keys(), POOH_COLOR_CHOICES.keys()),
+        default='金黄色',
+        blank=True,
+        null=True,
+    )
+    pee_amount = models.CharField(
+        max_length=12, 
+        choices=PEE_AMOUNT_CHOICES,
+        default='0',
+    )
+    pee_color = models.CharField(
+        max_length=2,
+        choices=PEE_COLOR_CHOICES,
+        default='0',
+        blank=True,
+        null=True,
+    )
+    notes = models.CharField(
+        max_length=80,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
-        return f"Pooh on {self.date} - Color: {self.color}, Amount: {self.amount}"
+        return f"Change Diaper at {self.create_at}"
 
 
 class BodyTemperature(models.Model):

@@ -59,7 +59,7 @@ class FeedingWithTimeForm(forms.ModelForm):
         }
         labels = {
             'feed_at': '时间',
-            'amount': '喂养量 (ml)',
+            'amount': '量 (ml)',
         }
 
 

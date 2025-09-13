@@ -27,6 +27,9 @@ def index(request: HttpRequest) -> HttpResponse:
     context['babycare_active'] = request.GET.get(
         'babycare_active', 'baby-feeding')
 
+    if request.session.get_expiry_age() <= 7*24*3600:
+        request.session.set_expiry(7 * 24 * 3600)
+
     baby_dates = BabyRelation.objects.filter(
         request_by=request.user,
         status__in=BabyRelation.accessible_status()

@@ -13,6 +13,8 @@ urlpatterns = [
          name='fetch_submit_body_temperature'),
     path('fetch/submit_growth_data/', views.fetch_submit_growth_data,
          name='fetch_submit_growth_data'),
+    path('fetch/submit_diaper/', views.fetch_submit_diaper,
+         name='fetch_submit_diaper'),
 
     path('', views.index, name='index'),
     path('create/', views.create_baby_date, name='create_baby_date'),
@@ -23,6 +25,8 @@ urlpatterns = [
          name='body_temperatures_list'),
     path('growth_datas/<int:baby_date_id>',
          views.GrowthDataListView.as_view(), name='growth_datas_list'),
+    path('diapers/<int:baby_date_id>',
+         views.DiaperListView.as_view(), name='diapers_list'),
     path('baby_date_relate_request/', views.baby_date_relate_request,
          name='baby_date_relate_request'),
     path('approve_baby_date_relate_request/',

@@ -1,0 +1,12 @@
+{% extends 'dashboard/base.html' %}
+
+{% block main %}
+<section>
+    <h2>尿布</h2>
+    {% include 'babycare/includes/diapers_list_table.html' %}
+    {% include 'dashboard/includes/pagination.html' %}
+</section>
+{% endblock %}
+
+{% block aside %}
+{% endblock %}

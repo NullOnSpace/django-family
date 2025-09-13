@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDate
+from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDate, Diaper
 
 
 class BabyDateForm(forms.ModelForm):
@@ -109,3 +109,31 @@ class GrowthDataForm(forms.ModelForm):
             'height': '身高 (cm)',
             'head_circumference': '头围 (cm)',
         }
+
+
+class DiaperForm(forms.ModelForm):
+    class Meta:
+        model = Diaper
+        fields = ['baby_date', 'pooh_amount', 'pooh_color', 'pee_amount', 'pee_color', 'notes']
+        widgets = {
+            'baby_date': forms.HiddenInput(),
+            'pooh_amount': forms.Select(attrs={'class': 'form-select form-control-sm'}),
+            'pooh_color': forms.Select(attrs={'class': 'form-select form-control-sm'}),
+            'pee_amount': forms.Select(attrs={'class': 'form-select form-control-sm'}),
+            'pee_color': forms.Select(attrs={'class': 'form-select form-control-sm'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 1}),
+        }
+        labels = {
+            'pooh_amount': '大便量',
+            'pooh_color': '大便颜色',
+            'pee_amount': '小便量',
+            'pee_color': '小便颜色',
+            'notes': '备注',
+        }
+    
+    def clean(self):
+        cd = super().clean()
+        if cd.get('pooh_amount') == '0':
+            cd['pooh_color'] = None
+        if cd.get('pee_amount') == '0':
+            cd['pee_color'] = None

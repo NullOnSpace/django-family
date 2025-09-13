@@ -19,7 +19,7 @@
             </section>
             <section>
                 <h2>成长记录</h2>
-                {% include "babycare/includes/baby_record.html" with baby_date=baby.baby_date feedings=baby.feedings feeding_form=baby.feeding_form body_temperatures=baby.body_temperatures body_temperature_form=baby.body_temperature_form growth_data=baby.growth_data growth_data_form=baby.growth_data_form %}
+                {% include "babycare/includes/baby_record.html" with baby_date=baby.baby_date feedings=baby.feedings feeding_form=baby.feeding_form body_temperatures=baby.body_temperatures body_temperature_form=baby.body_temperature_form growth_data=baby.growth_data growth_data_form=baby.growth_data_form diapers=baby.diapers diaper_form=baby.diaper_form%}
             </section>
         </div>
         {% endfor %}

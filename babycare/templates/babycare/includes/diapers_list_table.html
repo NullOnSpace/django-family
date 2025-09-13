@@ -1,0 +1,26 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>时间</th>
+            <th>大便</th>
+            <th>颜色</th>
+            <th>小便</th>
+            <th>颜色</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for diaper in diapers %}
+        <tr>
+            <td>{{ diaper.create_at|date:"Y-m-d H:i" }}{% if diaper.notes %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ diaper.notes }}"></i>{% endif %}</td>
+            <td>{{ diaper.get_pooh_amount_display }}</td>
+            <td>{{ diaper.get_pooh_color_display|default:"-" }}</td>
+            <td>{{ diaper.get_pee_amount_display }}</td>
+            <td>{{ diaper.get_pee_color_display|default:"-" }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">暂无尿布记录</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

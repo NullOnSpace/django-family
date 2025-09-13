@@ -346,6 +346,10 @@ class Diaper(models.Model):
     def __str__(self):
         return f"Change Diaper at {self.create_at}"
 
+    @classmethod
+    def get_recent_diapers(cls, baby_date_id, limit=9):
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-create_at')[:limit]
+
 
 class BodyTemperature(models.Model):
     MEASUREMENT_CHOICES = [

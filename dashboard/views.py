@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
 
-from babycare.models import BabyRelation, BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData
-from babycare.modelforms import FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm
+from babycare.models import BabyRelation, BabyDate, Feeding, BreastBumping, BodyTemperature, GrowthData, Diaper
+from babycare.modelforms import FeedingForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, DiaperForm
 from task_calendar.models import TaskCalendar
 from task_calendar.modelforms import TaskCalendarForm
 from shopping_list.models import ShoppingList
@@ -50,6 +50,11 @@ def index(request: HttpRequest) -> HttpResponse:
         baby['growth_data'] = GrowthData.get_recent_growth_data(baby_date.pk)
         baby['growth_data_form'] = GrowthDataForm(
             initial={'baby_date': baby_date.pk})
-        
+
+        baby['diapers'] = Diaper.get_recent_diapers(baby_date.id)
+        baby['diaper_form'] = DiaperForm(
+            initial={'baby_date': baby_date.pk}
+        )
+
         babies.append(baby)
     return render(request, 'dashboard/index.html', context)

@@ -13,7 +13,7 @@ from django.utils.html import escape
 
 from babycare import models
 from babycare.modelforms import (
-    FeedingForm, FeedingWithTimeForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm)
+    FeedingForm, FeedingWithTimeForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm, DiaperForm)
 from iuser.decorators import login_or_404
 from utils.datetime import get_local_date, get_range_of_date
 
@@ -290,6 +290,26 @@ def fetch_submit_growth_data(request: HttpRequest) -> HttpResponse:
     url += f'?babycare_active=growth-data'
     return HttpResponseRedirect(url)
 
+@require_POST
+def fetch_submit_diaper(request: HttpRequest) -> HttpResponse:
+    form = DiaperForm(request.POST)
+    if form.is_valid():
+        diaper = form.save(commit=False)
+        relation = models.BabyRelation.objects.filter(
+            baby_date=diaper.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.editable_status(),
+        ).exists()
+        if relation:
+            diaper.save()
+        else:
+            return HttpResponseForbidden()
+    else:
+        print(form.errors)
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=diaper'
+    return HttpResponseRedirect(url)
+
 
 @require_POST
 def submit_feeding_with_time(request: HttpRequest) -> HttpResponse:
@@ -370,6 +390,25 @@ class GrowthDataListView(ListView):
 
     def get_queryset(self):
         return models.GrowthData.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-record_at')
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'babycare'
+        return context
+
+
+decorators.method_decorator(login_or_404, name='dispatch')
+class DiaperListView(ListView):
+    """
+    View to list all growth data.
+    """
+    model = models.Diaper
+    template_name = 'babycare/diapers_list.html'
+    context_object_name = 'diapers'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.Diaper.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-create_at')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

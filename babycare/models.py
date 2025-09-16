@@ -313,6 +313,12 @@ class Diaper(models.Model):
         ('2', '深黄'),
     )
 
+    PEE_COLOR_MAPPING = {
+        '0': '#FFFF96',
+        '1': '#F0F0F0',
+        '2': '#FFD700',
+    }
+
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='poohs')
     create_at = models.DateTimeField(default=timezone.now)
@@ -349,6 +355,24 @@ class Diaper(models.Model):
     @classmethod
     def get_recent_diapers(cls, baby_date_id, limit=9):
         return cls.objects.filter(baby_date=baby_date_id).order_by('-create_at')[:limit]
+    
+    def get_pooh_style(self):
+        return self.POOH_COLOR_CHOICES.get(self.pooh_color, {'hex': 'inherit'}).get('hex')
+    
+    def get_pooh_desc(self):
+        if self.pooh_amount is None:
+            return ''
+        elif self.pooh_color in self.POOH_COLOR_CHOICES:
+            detail = self.POOH_COLOR_CHOICES.get(self.pooh_color)
+            if detail is not None:
+                cause = detail.get('cause')
+            else:
+                cause = ''
+            return f'{self.pooh_color} - {cause}'
+
+    def get_pee_style(self):
+        return self.PEE_COLOR_MAPPING.get(self.pee_color, 'inherit')
+
 
 
 class BodyTemperature(models.Model):
@@ -362,10 +386,10 @@ class BodyTemperature(models.Model):
     baby_date = models.ForeignKey(
         BabyDate, on_delete=models.CASCADE, related_name='body_temperatures')
     measure_at = models.DateTimeField(default=timezone.now)
-    temperature = models.FloatField()  # 体温，单位为摄氏度
+    temperature = models.FloatField()
     measurement = models.CharField(
-        max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')  # 测量方式
-    notes = models.TextField(blank=True, null=True)  # 备注
+        max_length=10, choices=MEASUREMENT_CHOICES, default='temporal')
+    notes = models.TextField(blank=True, null=True)
 
     class Meta:
         get_latest_by = 'measure_at'

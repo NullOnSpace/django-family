@@ -6,6 +6,7 @@
         <span class="switcher-button{% if babycare_active == 'body-temperature' %} active-button{% endif %}" data-target="body-temperature">体温</span>
         <span class="switcher-button{% if babycare_active == 'growth-data' %} active-button{% endif %}" data-target="growth-data">生长数据</span>
         <span class="switcher-button{% if babycare_active == 'diaper' %} active-button{% endif %}" data-target="diaper">尿布</span>
+        <span class="switcher-button{% if babycare_active == 'misc-record' %} active-button{% endif %}" data-target="misc-record">其他</span>
     </div>
     <div class="switcher-contents" id="baby-record-contents">
         <div class="switcher-content{% if babycare_active == 'baby-feeding' %} active-content{% endif %} container" id="baby-feeding">
@@ -40,9 +41,9 @@
         <div class="switcher-content{% if babycare_active == 'growth-data' %} active-content{% endif %} container" id="growth-data">
             <div>
                 <form action="{% url 'babycare:fetch_submit_growth_data' %}" method="post">
-                {{ growth_data_form.as_p }}
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                    {{ growth_data_form.as_p }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm">提交</button> 
                 </form>
             </div>
             <div>
@@ -62,6 +63,19 @@
                 {% include 'babycare/includes/diapers_list_table.html' %}
             </div>
             <div class="p-1"><a href="{% url 'babycare:diapers_list' baby_date_id=baby_date.id %}">查看所有</a></div>
+        </div>
+        <div class="switcher-content{% if babycare_active == 'misc-record' %} active-content{% endif %} container" id="misc-record">
+            <div>
+                <form action="{# url 'babycare:fetch_submit_misc_record' #}" method="post">
+                {{ misc_record_form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">提交</button> 
+                </form>
+            </div>
+            <div>
+                {# include 'babycare/includes/misc_records_list_table.html' #}
+            </div>
+            <div class="p-1"><a href="{# url 'babycare:misc_records_list' baby_date_id=baby_date.id #}">查看所有</a></div>
         </div>
     </div>
 </div>

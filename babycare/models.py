@@ -453,3 +453,7 @@ class MiscRecord(models.Model):
 
     def __str__(self):
         return f"{self.misc_item.item_name} for {self.baby_date} at {self.record_at}"
+    
+    @classmethod
+    def get_recent_records(cls, baby_date_id, limit=10):
+        return cls.objects.filter(baby_date=baby_date_id).order_by('-record_at')[:limit]

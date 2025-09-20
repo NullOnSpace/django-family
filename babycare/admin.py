@@ -8,6 +8,8 @@ admin.site.register(models.BreastBumping)
 admin.site.register(models.BodyTemperature)
 admin.site.register(models.Diaper)
 admin.site.register(models.BabyRelation)
+admin.site.register(models.MiscItem)
+admin.site.register(models.MiscRecord)
 
 
 @admin.register(models.GrowthData)

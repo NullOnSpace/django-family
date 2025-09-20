@@ -66,16 +66,16 @@
         </div>
         <div class="switcher-content{% if babycare_active == 'misc-record' %} active-content{% endif %} container" id="misc-record">
             <div>
-                <form action="{# url 'babycare:fetch_submit_misc_record' #}" method="post">
+                <form action="{% url 'babycare:fetch_submit_misc_record' %}" method="post">
                 {{ misc_record_form.as_p }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm">提交</button> 
                 </form>
             </div>
             <div>
-                {# include 'babycare/includes/misc_records_list_table.html' #}
+                {% include 'babycare/includes/misc_records_list_table.html' %}
             </div>
-            <div class="p-1"><a href="{# url 'babycare:misc_records_list' baby_date_id=baby_date.id #}">查看所有</a></div>
+            <div class="p-1"><a href="{% url 'babycare:misc_records_list' baby_date_id=baby_date.id %}">查看所有</a></div>
         </div>
     </div>
 </div>

@@ -15,6 +15,8 @@ urlpatterns = [
          name='fetch_submit_growth_data'),
     path('fetch/submit_diaper/', views.fetch_submit_diaper,
          name='fetch_submit_diaper'),
+    path('fetch/submit_misc_record/', views.fetch_submit_misc_record,
+         name='fetch_submit_misc_record'),
 
     path('', views.index, name='index'),
     path('create/', views.create_baby_date, name='create_baby_date'),
@@ -27,6 +29,8 @@ urlpatterns = [
          views.GrowthDataListView.as_view(), name='growth_datas_list'),
     path('diapers/<int:baby_date_id>',
          views.DiaperListView.as_view(), name='diapers_list'),
+    path('misc_records/<int:baby_date_id>',
+         views.MiscRecordListView.as_view(), name='misc_records_list'),
     path('baby_date_relate_request/', views.baby_date_relate_request,
          name='baby_date_relate_request'),
     path('approve_baby_date_relate_request/',

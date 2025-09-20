@@ -141,18 +141,26 @@ class DiaperForm(forms.ModelForm):
 
 class MiscRecordForm(forms.ModelForm):
     misc_item = forms.ModelChoiceField(
+        label='营养剂/药剂名称',
         empty_label="请选择",
-        queryset=None
+        queryset=models.MiscItem.objects,
+        widget=forms.Select(attrs={'class': 'form-control  form-control-sm'})
     )
+
     class Meta:
         model = models.MiscRecord
-        fields = '__all__'
+        fields = ['baby_date', 'misc_item', 'notes']
+        widgets = {
+            'baby_date': forms.HiddenInput(),
+            'notes': forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows': 1}),
+        }
+        labels = {
+            'notes': '备注',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         baby_date = self['baby_date'].initial
-        print(f"baby date in init {baby_date}")
         if baby_date:
-            print(baby_date)
             self.fields['misc_item'].queryset = models.MiscItem.objects.filter(baby_date=baby_date)
             

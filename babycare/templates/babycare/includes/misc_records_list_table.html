@@ -1,0 +1,20 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>使用时间</th>
+            <th>用品名</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for misc_record in misc_records %}
+        <tr>
+            <td>{{ misc_record.record_at|date:"Y-m-d H:i" }}</td>
+            <td>{{ misc_record.misc_item.item_name }} {% if feeding.note %}<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ feeding.note }}"></i>{% endif %}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">暂无用品记录</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

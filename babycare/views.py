@@ -13,7 +13,7 @@ from django.utils.html import escape
 
 from babycare import models
 from babycare.modelforms import (
-    FeedingForm, FeedingWithTimeForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm, DiaperForm)
+    FeedingForm, FeedingWithTimeForm, BreastBumpingForm, BodyTemperatureForm, GrowthDataForm, BabyDateForm, DiaperForm, MiscRecordForm)
 from iuser.decorators import login_or_404
 from utils.datetime import get_local_date, get_range_of_date
 
@@ -310,6 +310,26 @@ def fetch_submit_diaper(request: HttpRequest) -> HttpResponse:
     url += f'?babycare_active=diaper'
     return HttpResponseRedirect(url)
 
+@require_POST
+def fetch_submit_misc_record(request: HttpRequest) -> HttpResponse:
+    form = MiscRecordForm(request.POST)
+    if form.is_valid():
+        misc_record = form.save(commit=False)
+        relation = models.BabyRelation.objects.filter(
+            baby_date=misc_record.baby_date,
+            request_by=request.user,
+            status__in=models.BabyRelation.editable_status(),
+        ).exists()
+        if relation:
+            misc_record.save()
+        else:
+            return HttpResponseForbidden()
+    else:
+        print(form.errors)
+    url = reverse('dashboard:index')
+    url += f'?babycare_active=misc-record'
+    return HttpResponseRedirect(url)
+
 
 @require_POST
 def submit_feeding_with_time(request: HttpRequest) -> HttpResponse:
@@ -409,6 +429,22 @@ class DiaperListView(ListView):
 
     def get_queryset(self):
         return models.Diaper.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-create_at')
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'babycare'
+        return context
+
+
+decorators.method_decorator(login_or_404, name='dispatch')
+class MiscRecordListView(ListView):
+    model = models.MiscRecord
+    template_name = 'babycare/misc_records_list.html'
+    context_object_name = 'misc_records'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.MiscRecord.objects.filter(baby_date=self.kwargs['baby_date_id']).order_by('-record_at')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

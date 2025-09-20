@@ -374,7 +374,6 @@ class Diaper(models.Model):
         return self.PEE_COLOR_MAPPING.get(self.pee_color, 'inherit')
 
 
-
 class BodyTemperature(models.Model):
     MEASUREMENT_CHOICES = [
         ('temporal', '额温'),
@@ -414,7 +413,7 @@ class GrowthData(models.Model):
     weight = models.FloatField(blank=True, null=True)  # 体重，单位为千克
     height = models.FloatField(blank=True, null=True)  # 身高，单位为厘米
     head_circumference = models.FloatField(blank=True, null=True)  # 头围，单位为厘米
-    notes = models.TextField(blank=True, null=True)  # 备注
+    notes = models.TextField(blank=True, null=True)
 
     class Meta:
         get_latest_by = 'record_at'
@@ -430,3 +429,27 @@ class GrowthData(models.Model):
 
     def __str__(self):
         return f"Growth Data on {self.record_at} - Weight: {self.weight}kg, Height: {self.height}cm, Head Circumference: {self.head_circumference}cm"
+
+
+class MiscItem(models.Model):
+    baby_date = models.ForeignKey(
+        BabyDate, on_delete=models.CASCADE, related_name='misc_items')
+    item_name = models.CharField(max_length=40)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="created_misc_items")
+    notes = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.item_name}"
+
+
+class MiscRecord(models.Model):
+    baby_date = models.ForeignKey(
+        BabyDate, on_delete=models.CASCADE, related_name="misc_records"
+    )
+    misc_item = models.ForeignKey(
+        MiscItem, on_delete=models.CASCADE, related_name="misc_records")
+    record_at = models.DateTimeField(default=timezone.now)
+    notes = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.misc_item.item_name} for {self.baby_date} at {self.record_at}"

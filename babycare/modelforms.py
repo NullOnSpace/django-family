@@ -1,12 +1,12 @@
 from django import forms
 from django.utils import timezone
 
-from .models import Feeding, BreastBumping, BodyTemperature, GrowthData, BabyDate, Diaper
+from . import models
 
 
 class BabyDateForm(forms.ModelForm):
     class Meta:
-        model = BabyDate
+        model = models.BabyDate
         fields = ['nickname', 'last_menstrual_period',
                   'estimated_due_date', 'birthday', 'ultrasound_fixed_days']
         widgets = {
@@ -27,7 +27,7 @@ class BabyDateForm(forms.ModelForm):
 
 class FeedingForm(forms.ModelForm):
     class Meta:
-        model = Feeding
+        model = models.Feeding
         fields = ['baby_date', 'amount', 'note']
         widgets = {
             'baby_date': forms.HiddenInput(),
@@ -47,7 +47,7 @@ class FeedingWithTimeForm(forms.ModelForm):
     ))
 
     class Meta:
-        model = Feeding
+        model = models.Feeding
         fields = ['feed_at', 'baby_date', 'amount']
         widgets = {
             'baby_date': forms.HiddenInput(),
@@ -65,7 +65,7 @@ class FeedingWithTimeForm(forms.ModelForm):
 
 class BreastBumpingForm(forms.ModelForm):
     class Meta:
-        model = BreastBumping
+        model = models.BreastBumping
         fields = ['amount', 'notes']
         widgets = {
             'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
@@ -79,7 +79,7 @@ class BreastBumpingForm(forms.ModelForm):
 
 class BodyTemperatureForm(forms.ModelForm):
     class Meta:
-        model = BodyTemperature
+        model = models.BodyTemperature
         fields = ['baby_date', 'temperature', 'measurement', 'notes']
         widgets = {
             'baby_date': forms.HiddenInput(),
@@ -96,7 +96,7 @@ class BodyTemperatureForm(forms.ModelForm):
 
 class GrowthDataForm(forms.ModelForm):
     class Meta:
-        model = GrowthData
+        model = models.GrowthData
         fields = ['baby_date', 'weight', 'height', 'head_circumference']
         widgets = {
             'baby_date': forms.HiddenInput(),
@@ -113,7 +113,7 @@ class GrowthDataForm(forms.ModelForm):
 
 class DiaperForm(forms.ModelForm):
     class Meta:
-        model = Diaper
+        model = models.Diaper
         fields = ['baby_date', 'pooh_amount', 'pooh_color', 'pee_amount', 'pee_color', 'notes']
         widgets = {
             'baby_date': forms.HiddenInput(),
@@ -137,3 +137,22 @@ class DiaperForm(forms.ModelForm):
             cd['pooh_color'] = None
         if cd.get('pee_amount') == '0':
             cd['pee_color'] = None
+
+
+class MiscRecordForm(forms.ModelForm):
+    misc_item = forms.ModelChoiceField(
+        empty_label="请选择",
+        queryset=None
+    )
+    class Meta:
+        model = models.MiscRecord
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        baby_date = self['baby_date'].initial
+        print(f"baby date in init {baby_date}")
+        if baby_date:
+            print(baby_date)
+            self.fields['misc_item'].queryset = models.MiscItem.objects.filter(baby_date=baby_date)
+            

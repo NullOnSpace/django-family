@@ -3,7 +3,7 @@ from datetime import timedelta, datetime, time
 
 from django.utils import timezone, dateparse, decorators
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, Http404, HttpResponseForbidden, JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
@@ -47,10 +47,10 @@ def index(request: HttpRequest) -> HttpResponse:
         status__in=models.BabyRelation.accessible_status(),
     ).select_related('baby_date')
     for relation in relations:
-        baby_date_id = relation.baby_date.pk
+        baby_date = relation.baby_date
         nickname = relation.baby_date.nickname
         feedings = models.Feeding.objects.filter(
-            baby_date=baby_date_id)
+            baby_date=baby_date.pk)
         if feedings.exists():
             last_feeding = feedings.latest()
             last_feeding_date = get_local_date(last_feeding.feed_at)
@@ -62,22 +62,15 @@ def index(request: HttpRequest) -> HttpResponse:
             last_feedings_amount = None
             last_feeding_date = None
         body_temperatures = models.BodyTemperature.objects.filter(
-            baby_date=baby_date_id)
+            baby_date=baby_date.pk)
         if body_temperatures.exists():
             last_body_temperature = body_temperatures.latest()
             last_body_temperature_date = get_local_date(
                 last_body_temperature.measure_at)
         else:
             last_body_temperature = None
-            last_body_temperature_date = None
-        growth_data = models.GrowthData.objects.filter(
-            baby_date=baby_date_id,
-        )
-        if growth_data.exists():
-            last_growth_data = growth_data.latest()
-        else:
-            last_growth_data = None
-        babies.append((baby_date_id, nickname, last_feedings_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, last_growth_data, relation))
+            last_body_temperature_date = None        
+        babies.append((baby_date, nickname, last_feedings_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, relation))
     return render(request, 'babycare/index.html', context)
 
 @login_or_404
@@ -117,7 +110,7 @@ def baby_date_relate_request(request: HttpRequest) -> HttpResponse:
         if nickname:
             baby_date = models.BabyDate.objects.filter(nickname=nickname).first()
             if baby_date is not None:
-                obj, created = models.BabyRelation.objects.get_or_create(
+                _, created = models.BabyRelation.objects.get_or_create(
                     baby_date=baby_date, 
                     request_by=request.user,
                     )
@@ -329,6 +322,58 @@ def fetch_submit_misc_record(request: HttpRequest) -> HttpResponse:
     url = reverse('dashboard:index')
     url += f'?babycare_active=misc-record'
     return HttpResponseRedirect(url)
+
+
+def fetch_fenton_data(
+        request: HttpRequest, 
+        fenton_type: str, 
+        baby_date_id: int,
+    ) -> JsonResponse:
+    try:
+        baby_date = models.BabyDate.objects.get(id=baby_date_id)
+    except models.BabyDate.DoesNotExist:
+        return JsonResponse({'error': 'Invalid baby date id'})
+    if not baby_date.can_be_accessed_by(request.user):
+        return JsonResponse({'error': 'Insufficient permission'})
+    qs = models.GrowthData.objects.filter(baby_date=baby_date)
+    if fenton_type == 'weight':
+        values = qs.filter(weight__isnull=False
+                  ).order_by('-record_at'
+                             ).values('record_at', 'weight', 'notes')
+        return JsonResponse(list(map(
+            lambda x: {
+                'datetime': get_local_date(x['record_at']).strftime('%Y-%m-%d'),
+                'yData': x['weight'],
+                'notes': x['notes'],
+            },
+            values,
+        )), safe=False)
+    elif fenton_type == 'height':
+        values = qs.filter(height__isnull=False
+                  ).order_by('-record_at'
+                             ).values('record_at', 'height', 'notes')
+        return JsonResponse(list(map(
+            lambda x: {
+                'datetime': get_local_date(x['record_at']).strftime('%Y-%m-%d'),
+                'yData': x['height'],
+                'notes': x['notes'],
+            },
+            values,
+        )), safe=False)
+    elif fenton_type == 'head_circumference':
+        values = qs.filter(head_circumference__isnull=False
+                  ).order_by('-record_at'
+                             ).values('record_at', 'head_circumference', 'notes')
+        return JsonResponse(list(map(
+            lambda x: {
+                'datetime': get_local_date(x['record_at']).strftime('%Y-%m-%d'),
+                'yData': x['head_circumference'],
+                'notes': x['notes'],
+            },
+            values,
+        )), safe=False)
+    return JsonResponse({'error': 'Invalid fenton type f{fenton_type}'})
+
 
 
 @require_POST

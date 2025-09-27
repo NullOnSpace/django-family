@@ -17,6 +17,8 @@ urlpatterns = [
          name='fetch_submit_diaper'),
     path('fetch/submit_misc_record/', views.fetch_submit_misc_record,
          name='fetch_submit_misc_record'),
+    path('fetch/fenton-data/<str:fenton_type>/<int:baby_date_id>/',
+        views.fetch_fenton_data, name='fetch_fenton_data'), 
 
     path('', views.index, name='index'),
     path('create/', views.create_baby_date, name='create_baby_date'),

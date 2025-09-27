@@ -167,6 +167,13 @@ class BabyDate(models.Model):
             status__in=BabyRelation.editable_status(),
             request_by=user,
         ).exists()
+    
+    def  can_be_accessed_by(self, user) -> bool:
+        return BabyRelation.objects.filter(
+            baby_date=self.pk,
+            status__in=BabyRelation.accessible_status(),
+            request_by=user,
+        ).exists()
 
 
 class BabyRelation(models.Model):

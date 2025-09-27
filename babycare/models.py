@@ -27,6 +27,12 @@ class BabyDate(models.Model):
     nickname = models.CharField(max_length=20, null=True, unique=True)
     estimated_due_date = models.DateField(null=True, blank=True)  # 推测预产期
     birthday = models.DateTimeField(null=True, blank=True)  # 出生时间
+    gender = models.CharField(
+        max_length=1, 
+        choices=[('M', '男'), ('F', '女')],
+        null=True,
+        blank=True,
+    )
     ultrasound_fixed_days = models.IntegerField(
         default=0)  # 超声定位矫正的天数 正数代表比末次月经晚，负数代表比末次月经早
 

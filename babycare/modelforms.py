@@ -7,7 +7,7 @@ from . import models
 class BabyDateForm(forms.ModelForm):
     class Meta:
         model = models.BabyDate
-        fields = ['nickname', 'last_menstrual_period',
+        fields = ['nickname', 'last_menstrual_period', 'gender',
                   'estimated_due_date', 'birthday', 'ultrasound_fixed_days']
         widgets = {
             'nickname': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
@@ -15,6 +15,7 @@ class BabyDateForm(forms.ModelForm):
             'estimated_due_date': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'type': 'date'}),
             'birthday': forms.DateTimeInput(attrs={'class': 'form-control form-control-sm', 'type': 'datetime-local'}),
             'ultrasound_fixed_days': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'min': '0'}),
+            'gender': forms.Select(attrs={'class': 'form-select form-control-sm'}),
         }
         labels = {
             'nickname': '宝宝昵称',
@@ -22,6 +23,7 @@ class BabyDateForm(forms.ModelForm):
             'estimated_due_date': '预产期',
             'birthday': '出生日期',
             'ultrasound_fixed_days': '超声修正天数',
+            'gender': '性别',
         }
 
 

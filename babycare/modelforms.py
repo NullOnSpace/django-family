@@ -114,7 +114,8 @@ class GrowthDataForm(forms.ModelForm):
 class DiaperForm(forms.ModelForm):
     class Meta:
         model = models.Diaper
-        fields = ['baby_date', 'pooh_amount', 'pooh_color', 'pee_amount', 'pee_color', 'notes']
+        fields = ['baby_date', 'pooh_amount', 'pooh_color',
+                  'pee_amount', 'pee_color', 'notes']
         widgets = {
             'baby_date': forms.HiddenInput(),
             'pooh_amount': forms.Select(attrs={'class': 'form-select form-control-sm'}),
@@ -130,7 +131,7 @@ class DiaperForm(forms.ModelForm):
             'pee_color': '小便颜色',
             'notes': '备注',
         }
-    
+
     def clean(self):
         cd = super().clean()
         if cd.get('pooh_amount') == '0':
@@ -162,5 +163,4 @@ class MiscRecordForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         baby_date = self['baby_date'].initial
         if baby_date:
-            self.fields['misc_item'].queryset = models.MiscItem.objects.filter(baby_date=baby_date)
-            
+            self.fields['misc_item'].queryset = models.MiscItem.objects.filter(baby_date=baby_date) # pyright: ignore[reportAttributeAccessIssue]

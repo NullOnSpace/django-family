@@ -357,7 +357,9 @@ class Diaper(models.Model):
         return cls.objects.filter(baby_date=baby_date_id).order_by('-create_at')[:limit]
     
     def get_pooh_style(self):
-        return self.POOH_COLOR_CHOICES.get(self.pooh_color, {'hex': 'inherit'}).get('hex')
+        if self.pooh_color is not None:
+            return self.POOH_COLOR_CHOICES.get(self.pooh_color, {'hex': 'inherit'}).get('hex')
+        return 'inherit'
     
     def get_pooh_desc(self):
         if self.pooh_amount is None:
@@ -371,6 +373,8 @@ class Diaper(models.Model):
             return f'{self.pooh_color} - {cause}'
 
     def get_pee_style(self):
+        if self.pee_color is None:
+            return 'inherit'
         return self.PEE_COLOR_MAPPING.get(self.pee_color, 'inherit')
 
 

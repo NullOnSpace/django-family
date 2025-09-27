@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Declare the chart dimensions and margins.
     const width = Math.min(document.body.clientWidth, 640);
     const height = 300;
-    const marginTop = 30;
-    const marginRight = 60;
+    const marginTop = 60;
+    const marginRight = 30;
     const marginBottom = 30;
-    const marginLeft = 40;
+    const marginLeft = 30;
     document.querySelectorAll(".fenton-curve").forEach(function (element) {
         const startDate = new Date(element.dataset.startDate);
         const fentonCurveUrl = element.dataset.fentonCurveUrl;

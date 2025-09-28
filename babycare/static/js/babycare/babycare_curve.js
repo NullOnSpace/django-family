@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Declare the chart dimensions and margins.
-    const width = Math.min(document.body.clientWidth, 640);
+    const width = Math.min(document.body.clientWidth - 24, 640);  // 主容器左右各有12的padding
     const height = 300;
     const marginTop = 60;
     const marginRight = 30;

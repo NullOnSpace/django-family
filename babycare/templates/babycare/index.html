@@ -60,11 +60,11 @@
     </div>
     </a>
     <div class="fenton-curve col-12" data-fenton-type="weight" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_weight.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_weight.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='weight' baby_date_id=baby_date.pk %}"></div>
-    <div class="text-center">体重曲线</div>
+    <div style="max-width: 640px;" class="text-center">体重曲线</div>
     <div class="fenton-curve col-12" data-fenton-type="height" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_length.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_length.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='height' baby_date_id=baby_date.pk %}"></div>
-    <div class="text-center">身高曲线</div>
+    <div style="max-width: 640px;" class="text-center">身高曲线</div>
     <div class="fenton-curve col-12" data-fenton-type="head_circumference" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_head_circumference.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_head_circumference.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='head_circumference' baby_date_id=baby_date.pk %}"></div>
-    <div class="text-center">头围曲线</div>
+    <div style="max-width: 640px;" class="text-center">头围曲线</div>
 </div>
 <hr>
 {% endfor %}

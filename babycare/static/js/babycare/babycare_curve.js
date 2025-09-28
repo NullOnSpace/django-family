@@ -1,13 +1,33 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // 节流函数实现
+    function throttle(func, delay) {
+        let timeoutId;
+        let lastExecTime = 0;
+
+        return function (...args) {
+            const currentTime = Date.now();
+
+            if (currentTime - lastExecTime >= delay) {
+                func.apply(this, args);
+                lastExecTime = currentTime;
+            } else {
+                // clearTimeout(timeoutId);
+                // timeoutId = setTimeout(() => {
+                //     func.apply(this, args);
+                //     lastExecTime = Date.now();
+                // }, delay - (currentTime - lastExecTime));
+            }
+        };
+    }
     function showGuidelines(circleElement, data, guidelineGroup, unitName) {
         const circle = d3.select(circleElement);
         const cx = circle.attr("cx");
         const cy = circle.attr("cy");
-        
+
         // 获取坐标轴位置
         const xAxisY = marginLeft;
         const yAxisX = height - marginBottom;
-        
+
         // 创建到 x 轴的虚线（垂直线）
         guidelineGroup.append("line")
             .attr("class", "guideline x-guideline")
@@ -18,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("stroke", "#999")
             .attr("stroke-dasharray", "7,5,2,5")
             .attr("stroke-width", 1);
-        
+
         // 创建到 y 轴的虚线（水平线）
         guidelineGroup.append("line")
             .attr("class", "guideline y-guideline")
@@ -102,8 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(response => response.json())
                     .then(fentonCurveData => {
                         const filteredFentonCurveData = d3.filter(
-                            fentonCurveData, 
-                            d => (d.week >= minWeek && d.week <= maxWeek && 
+                            fentonCurveData,
+                            d => (d.week >= minWeek && d.week <= maxWeek &&
                                 (d.type === "3%" || d.type === "10%" || d.type === "50%" || d.type === "90%" || d.type === "97%"))
                         );
 
@@ -127,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const svg = d3.create("svg")
                             .attr("width", width)
                             .attr("height", height);
-                        
+
                         svg.append("rect")
                             .attr("x", 0)
                             .attr("y", 0)
@@ -165,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const sortedData = Array.from(groupData).sort((a, b) => a.week - b.week);
 
                             const g = svg.append("g");
-                            
+
                             g.append("path")
                                 .datum(sortedData)
                                 .attr("fill", "none")
@@ -173,30 +193,45 @@ document.addEventListener('DOMContentLoaded', function () {
                                 .attr("stroke-width", 0.5)
                                 .attr("d", line);
                         });
-                        
+
                         // 生长数据点
                         const growthDataGroup = svg.append("g");
                         growthDataGroup.selectAll("circle")
-                        .data(growthData)
-                        .enter()
-                        .append("circle")
-                        .attr("cx", (d) => x(getWeek(new Date(d.datetime), startDate)))
-                        .attr("cy", (d) => y(d.yData))
-                        .attr("r", 3)
-                        .attr("fill", "blue")
-                        .on("mouseover", function(event, d) {
-                            showGuidelines(this, d, guidelineGroup, unitName);
-                        })
-                        .on("mouseout", function() {
-                            hideGuidelines(guidelineGroup);
-                        });
-                        
+                            .data(growthData)
+                            .enter()
+                            .append("circle")
+                            .attr("cx", (d) => x(getWeek(new Date(d.datetime), startDate)))
+                            .attr("cy", (d) => y(d.yData))
+                            .attr("r", 3)
+                            .attr("fill", "blue");
+
+                        const svgMousemoveThrottleHandler = throttle(function (event) {
+                            const [mouseX, mouseY] = d3.pointer(event);
+                            console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
+                            //在growthDataGroup中查找最接近的点
+                            const circleWithDists = d3.map(growthDataGroup.selectAll("circle"), function (circleElement) {
+                                const circle = d3.select(circleElement);
+                                const distance = Math.sqrt(Math.pow(mouseX - circle.attr("cx"), 2) + Math.pow(mouseY - circle.attr("cy"), 2));
+                                console.log(`distance: ${distance}`);
+                                return [distance, circleElement];
+                            });
+                            const [distance, circleElement] = circleWithDists.at(d3.minIndex(circleWithDists, (d) => d[0]));
+                            if (distance < 10) {
+                                hideGuidelines(guidelineGroup);
+                                showGuidelines(circleElement, circleElement.__data__, guidelineGroup, unitName);
+                            } else {
+                                hideGuidelines(guidelineGroup);
+                            }
+                        }, 100);
+
+                        svg.on("mousemove", svgMousemoveThrottleHandler);
+
                         const guidelineGroup = svg.append("g").attr("class", "guidelines");
 
                         element.append(svg.node());
                     }
-                );
+                    );
             }
-        );
+            );
     });
 });

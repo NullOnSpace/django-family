@@ -4,7 +4,9 @@
 {% block title %}主页{% endblock %}
 
 {% block main %}
-{% include 'babycare/includes/baby_create_or_link.html' %}
+<div class="mb-3">
+    {% include 'babycare/includes/baby_create_or_link.html' %}
+</div>
 {% if to_approve %}
 <div class="m-3 p-3">
     {% for relation in to_approve %}
@@ -35,36 +37,44 @@
 </div>
 {% endif %}
 {% for baby_date, nickname, last_feedings_amount, last_feeding_date, last_body_temperature, last_body_temperature_date, relation in babies %}
-<div class="row font-monospace my-3">
+<div>
     <h2>{{ nickname }}<i class="bi bi-{{ relation.status_css_class }}"></i></h2>
-    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' baby_date_id=baby_date.pk %}">
-    <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
-        {% if last_feedings_amount %}
-        <div class="text-start fs-6">上一次全天喂奶量:</div>
-        <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feedings_amount|floatformat:"0" }}mL</div>
-        <div class="text-end fs-6">{{ last_feeding_date|date:"Y-m-d" }}</div>
-        {% else %}
-        <div class="text-start fs-6">没有喂奶记录</div>
-        {% endif %}
-    </div>
-    </a>
-    <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:body_temperatures_list' baby_date_id=baby_date.pk %}">
-    <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
-        {% if last_body_temperature %}
-        <div class="text-start fs-6">上一次体温:</div>
-        <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature|floatformat:"1" }}°C</div>
-        <div class="text-end fs-6">{{ last_body_temperature_date|date:"Y-m-d" }}</div>
-        {% else %}
-        <div class="text-start fs-6">没有体温记录</div>
-        {% endif %}
-    </div>
-    </a>
-    <div class="fenton-curve col-12" data-fenton-type="weight" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_weight.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_weight.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='weight' baby_date_id=baby_date.pk %}"></div>
-    <div style="max-width: 640px;" class="text-center">体重曲线</div>
-    <div class="fenton-curve col-12" data-fenton-type="height" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_length.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_length.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='height' baby_date_id=baby_date.pk %}"></div>
-    <div style="max-width: 640px;" class="text-center">身高曲线</div>
-    <div class="fenton-curve col-12" data-fenton-type="head_circumference" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_head_circumference.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_head_circumference.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='head_circumference' baby_date_id=baby_date.pk %}"></div>
-    <div style="max-width: 640px;" class="text-center">头围曲线</div>
+    <section class="row font-monospace my-3">
+        <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:feedings_list' baby_date_id=baby_date.pk %}">
+        <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
+            {% if last_feedings_amount %}
+            <div class="text-start fs-6">上一次全天喂奶量:</div>
+            <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-droplet"></i>{{ last_feedings_amount|floatformat:"0" }}mL</div>
+            <div class="text-end fs-6">{{ last_feeding_date|date:"Y-m-d" }}</div>
+            {% else %}
+            <div class="text-start fs-6">没有喂奶记录</div>
+            {% endif %}
+        </div>
+        </a>
+        <a class="col-lg-4 col-sm-6 col-8 m-lg-3 mb-sm-3 my-3 mx-auto link-info link-offset-2 link-underline link-underline-opacity-25" href="{% url 'babycare:body_temperatures_list' baby_date_id=baby_date.pk %}">
+        <div class="rounded-4 bg-info text-info-emphasis h3 border border-3 border-primary-subtle shadow p-4">
+            {% if last_body_temperature %}
+            <div class="text-start fs-6">上一次体温:</div>
+            <div class="text-start fs-2 fw-bold py-3"><i class="bi bi-thermometer-half"></i>{{ last_body_temperature.temperature|floatformat:"1" }}°C</div>
+            <div class="text-end fs-6">{{ last_body_temperature_date|date:"Y-m-d" }}</div>
+            {% else %}
+            <div class="text-start fs-6">没有体温记录</div>
+            {% endif %}
+        </div>
+        </a>
+    </section>
+    <section class="px-0 row text-center">
+        <div class="text-center fw-bolder my-2">体重曲线</div>
+        <div class="fenton-curve col-12" data-fenton-type="weight" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_weight.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_weight.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='weight' baby_date_id=baby_date.pk %}"></div>
+    </section>
+    <section class="px-0 row text-center">
+        <div class="text-center fw-bolder my-2">身高曲线</div>
+        <div class="fenton-curve col-12" data-fenton-type="height" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_length.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_length.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='height' baby_date_id=baby_date.pk %}"></div>
+    </section>
+    <section class="px-0 row text-center">
+        <div class="text-center fw-bolder my-2">头围曲线</div>
+        <div class="fenton-curve col-12" data-fenton-type="head_circumference" data-start-date="{{ baby_date.last_menstrual_period|date:'Y-m-d' }}" data-fenton-curve-url="{% if baby_date.gender == 'M' %}{% static 'json/babycare/boys_head_circumference.json' %}{% elif baby_date.gender == 'F' %}{% static 'json/babycare/girls_head_circumference.json' %}{% endif %}" data-curve-data-url="{% url 'babycare:fetch_fenton_data' fenton_type='head_circumference' baby_date_id=baby_date.pk %}"></div>
+    </section>
 </div>
 <hr>
 {% endfor %}

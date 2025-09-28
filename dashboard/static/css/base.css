@@ -10,6 +10,11 @@ section {
     margin-bottom: 1rem;
 }
 
+.ignore-main-padding {
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+}
+
 section > h2, section > h3 {
     margin-top: 0.5rem;
 }

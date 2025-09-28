@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Declare the chart dimensions and margins.
     const width = Math.min(document.body.clientWidth - 24, 640);  // 主容器左右各有12的padding
     const height = 300;
-    const marginTop = 60;
+    const marginTop = 30;
     const marginRight = 30;
     const marginBottom = 30;
-    const marginLeft = 30;
+    const marginLeft = 40;
     document.querySelectorAll(".fenton-curve").forEach(function (element) {
         const startDate = new Date(element.dataset.startDate);
         const fentonCurveUrl = element.dataset.fentonCurveUrl;
@@ -126,8 +126,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Create the SVG container.
                         const svg = d3.create("svg")
                             .attr("width", width)
+                            .attr("height", height);
+                        
+                        svg.append("rect")
+                            .attr("x", 0)
+                            .attr("y", 0)
+                            .attr("rx", 8)
+                            .attr("ry", 8)
+                            .attr("width", width)
                             .attr("height", height)
-                            .attr("style", "fill:grey;");
+                            .attr("fill", "rgb(248,249,250)");
 
                         // Add the x-axis.
                         svg.append("g")
@@ -165,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 .attr("stroke-width", 0.5)
                                 .attr("d", line);
                         });
-
                         
                         // 生长数据点
                         const growthDataGroup = svg.append("g");

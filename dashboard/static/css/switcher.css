@@ -14,7 +14,7 @@
     background-color: var(--bs-info);
     color: var(--bs-info-text-emphasis);
     border-radius: 5px;
-    box-shadow: 0 3px 3px rgba(var(--bs-body-color-rgb),.3)!important;
+    box-shadow: var(--bs-box-shadow-sm);
     font-weight: bold;
 }
 

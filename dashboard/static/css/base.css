@@ -1,12 +1,11 @@
 body {
-    background-color: var(--bs-light);
+    background-color: var(--bs-body-bg);
 }
 
 section {
-    background-color: var(--bs-light-bg-subtle);
+    background-color: var(--bs-tertiary-bg);
     padding: 0.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 4px 4px 8px rgba(var(--bs-body-color-rgb), 0.15);
+    box-shadow: var(--bs-box-shadow);
     margin-bottom: 1rem;
 }
 

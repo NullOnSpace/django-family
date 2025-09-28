@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // 节流函数实现
     function throttle(func, delay) {
-        let timeoutId;
+        // let timeoutId;
         let lastExecTime = 0;
 
         return function (...args) {
@@ -53,21 +53,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const dateString = d3.timeFormat("%y/%m/%d")(new Date(data.datetime));
         const guidelineText1 = `${dateString}`;
         const guidelineText2 = `${data.yData} ${unitName}`;
+        const textColor = "var(--bs-emphasis-color)";
         guidelineGroup.append("text")
             .attr("class", "guideline guideline-text")
             .attr("x", cx)
             .attr("y", cy - 10)
             .attr("text-anchor", "middle")
             .attr("font-size", "1em")
-            .attr("fill", "rebeccapurple")
+            .attr("fill", textColor)
             .text(guidelineText2);
         guidelineGroup.append("text")
             .attr("class", "guideline guideline-text")
             .attr("x", cx)
-            .attr("y", cy - 26)
+            .attr("y", cy - 30)
             .attr("text-anchor", "middle")
             .attr("font-size", "1em")
-            .attr("fill", "rebeccapurple")
+            .attr("fill", textColor)
             .text(guidelineText1);
     }
     function hideGuidelines(guidelineGroup) {
@@ -88,6 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const marginRight = 30;
     const marginBottom = 30;
     const marginLeft = 40;
+
+    const pctMapping = {
+        "3%": {"color": "var(--bs-danger)", "dashArray": "7,5,2,5",},
+        "10%": {"color": "var(--bs-warning)", "dashArray": "7,3"},
+        "50%": {"color": "var(--bs-success)", "dashArray": "5,5"},
+        "90%": {"color": "var(--bs-warning)", "dashArray": "7,3"},
+        "97%": {"color": "var(--bs-danger)", "dashArray": "7,5,2,5"},
+    };
     document.querySelectorAll(".fenton-curve").forEach(function (element) {
         const startDate = new Date(element.dataset.startDate);
         const fentonCurveUrl = element.dataset.fentonCurveUrl;
@@ -155,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             .attr("ry", 8)
                             .attr("width", width)
                             .attr("height", height)
-                            .attr("fill", "rgb(248,249,250)");
+                            .attr("fill", "var(--bs-secondary-bg)");
 
                         // Add the x-axis.
                         svg.append("g")
@@ -178,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         const groupedData = d3.group(filteredFentonCurveData, d => d.type);
 
-                        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+                        // const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
                         groupedData.forEach((groupData, groupName) => {
                             // 对每组数据按b属性排序以确保曲线正确连接
@@ -186,14 +195,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             const g = svg.append("g");
 
+                            const pctDef = pctMapping[groupName];
                             g.append("path")
                                 .datum(sortedData)
                                 .attr("fill", "none")
-                                .attr("stroke", colorScale(groupName))
+                                .attr("stroke", pctDef.color)
+                                .attr("stroke-dasharray", pctDef.dashArray)
                                 .attr("stroke-width", 0.5)
                                 .attr("d", line);
                         });
 
+                        // 生长数据曲线
+                        const growthDataLineGroup = svg.append("g");
+                        const growthDataLine = d3.line()
+                            .x((d) => x(getWeek(new Date(d.datetime), startDate)))
+                            .y((d) => y(d.yData))
+                            .curve(d3.curveLinear);
+                        growthDataLineGroup.append("path")
+                            .datum(growthData)
+                            .attr("fill", "none")
+                            .attr("stroke", "var(--bs-primary)")
+                            .attr("stroke-width", 2)
+                            .attr("d", growthDataLine);
                         // 生长数据点
                         const growthDataGroup = svg.append("g");
                         growthDataGroup.selectAll("circle")
@@ -203,16 +226,21 @@ document.addEventListener('DOMContentLoaded', function () {
                             .attr("cx", (d) => x(getWeek(new Date(d.datetime), startDate)))
                             .attr("cy", (d) => y(d.yData))
                             .attr("r", 3)
-                            .attr("fill", "blue");
+                            .attr("fill", "var(--bs-primary)");
+
+                        d3.select(growthDataGroup.selectAll("circle").nodes()[0])
+                            .attr("stroke", "var(--bs-secondary)")
+                            .attr("stroke-width", 2)
+                            .attr("r", 4);
 
                         const svgMousemoveThrottleHandler = throttle(function (event) {
                             const [mouseX, mouseY] = d3.pointer(event);
-                            console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
+                            // console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
                             //在growthDataGroup中查找最接近的点
                             const circleWithDists = d3.map(growthDataGroup.selectAll("circle"), function (circleElement) {
                                 const circle = d3.select(circleElement);
                                 const distance = Math.sqrt(Math.pow(mouseX - circle.attr("cx"), 2) + Math.pow(mouseY - circle.attr("cy"), 2));
-                                console.log(`distance: ${distance}`);
+                                // console.log(`distance: ${distance}`);
                                 return [distance, circleElement];
                             });
                             const [distance, circleElement] = circleWithDists.at(d3.minIndex(circleWithDists, (d) => d[0]));
@@ -229,9 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const guidelineGroup = svg.append("g").attr("class", "guidelines");
 
                         element.append(svg.node());
-                    }
-                    );
-            }
-            );
+                    });
+            });
     });
 });
